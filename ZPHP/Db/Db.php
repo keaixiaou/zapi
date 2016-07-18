@@ -55,6 +55,7 @@ class Db {
                 if(!empty($config['charset'])){
                     self::$db[$db_key]->query('set names ' . $config['charset']);
                 }
+                self::$db[$db_key]->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
             }
         }

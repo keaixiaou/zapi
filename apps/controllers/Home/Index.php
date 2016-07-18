@@ -15,12 +15,14 @@ use ZPHP\Db\Db;
 
 class Index {
     public function index(){
+        Log::write('hello world');
 //        $data = Db::table()->query('select* from admin_user');
 //        echo json_encode($data);
 //        $a = DB::table()->query('select*from admin_user where id =1');
-//        $model  = table('admin_user')->where(['id'=>1])->find();
+        $model  = table('admin_user')->where(['id'=>1])->find();
+//        $model = table('admin_user')->where(['id']);
         echo 'hello world!';
-//        echo json_encode($model);
+        echo json_encode($model);
 //        unset($model);
     }
     public function abcd(){

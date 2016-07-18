@@ -214,7 +214,7 @@ class ZPHP
             self::start($run);
         }else if ($argv=='stop'){
             self::stop();
-            exit( 'Service stop success!\n');
+            exit( 'Service stop success!');
         }else if ($argv =='restart'){
             self::stop();
             echo "Service stop success!\nService is starting...\n";

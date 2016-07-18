@@ -45,7 +45,7 @@ class Model {
         $pdo = $this->db->prepare($sql);
         $res = $pdo->execute();
         if($res){
-            $data =  strtolower($sql[0])!=='s'?$pdo->rowCount():$pdo->fetchAll();
+            $data =  strtolower($sql[0])!=='s'?$pdo->rowCount():$pdo->fetchall();
             $pdo->closeCursor();
             return $data;
         }else{
