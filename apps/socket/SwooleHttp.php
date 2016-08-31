@@ -19,6 +19,7 @@ class SwooleHttp extends ZSwooleHttp
 
     public function onRequest($request, $response)
     {
+        $this->currentResponse = $response;
         ob_start();
         try {
             $mvc = Config::getField('project','mvc');

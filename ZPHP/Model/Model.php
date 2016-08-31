@@ -187,7 +187,7 @@ class Model {
     public function find(){
         $this->limit(1);
         $data = $this->query($this->makesql());
-        Log::write('data:'.json_encode($data));
+//        Log::write('data:'.json_encode($data));
         return empty($data[0])?null:$data[0];
     }
 
@@ -233,7 +233,7 @@ class Model {
                 $this->for_update,
             ));
 
-        Log::write('sql:'.$sql);
+//        Log::write('sql:'.$sql);
         return $sql;
     }
 }

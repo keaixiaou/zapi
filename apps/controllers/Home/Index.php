@@ -26,6 +26,8 @@ class Index {
 //        $redis->set('abcd','hello world');
 //        var_dump($redis->set('abcd','1234',3600));
 //        echo $redis->set('abcd',1111,3600);
+        $data = Db::collection('stu_quest_score')->findOne(['iStuId'=>26753]);
+        echo json_encode($data);
         echo cache('abcd');
 //        $data = Db::table()->query('select* from admin_user');
 //        echo json_encode($data);

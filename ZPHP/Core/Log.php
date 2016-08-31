@@ -30,7 +30,7 @@ abstract class Log {
 
     //写日志
     static public function write($msg, $level=self::ERROR){
-        $file_path = ZPHP::getRootPath().'/log';
+        $file_path = ZPHP::getRootPath().'/log/app';
         if(!is_dir($file_path)){
             mkdir($file_path, 0755, true);
         }

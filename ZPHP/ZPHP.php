@@ -181,6 +181,11 @@ class ZPHP
 
             $timeZone = Config::get('time_zone', 'Asia/Shanghai');
             \date_default_timezone_set($timeZone);
+
+            if(!DEBUG){
+                error_reporting(E_ALL^E_NOTICE^E_WARNING);
+            }
+
             if (PHP_OS == 'WINNT')
             {
                 self::setOs(new Windows());

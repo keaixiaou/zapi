@@ -16,6 +16,7 @@ class Db {
     public static $instance;
     protected static $db;
     protected static $_tables;
+    protected static $_collection;
     private static $lastSql;
 
     function __construct($db_key='master'){
@@ -41,6 +42,23 @@ class Db {
         return self::$_tables[$tableName];
     }
 
+
+    public static function collection($collectName = ''){
+        if(!isset(self::$_collection[$collectName])){
+            $config = Config::get('mongo');
+            $host = 'mongodb://'.(!empty($config['username'])?"{$config['username']}":'')
+                .(!empty($config['password'])?":{$config['password']}@":'')
+                .$config['host'].(!empty($config['port'])?":{$config['port']}":'');
+            $config['dsn'] = $host;
+            $mongo = new Mongo();
+            $mongo->connect($config);
+            $mongo->setDBName($config['database']);
+            $mongo->selectCollection($collectName);
+            self::$_collection[$collectName] = $mongo;
+            unset($mongo);
+        }
+        return self::$_collection[$collectName];
+    }
 
     public function getDb($db_key= 'master'){
         if(!isset(self::$db[$db_key])){
