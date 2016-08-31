@@ -8,7 +8,7 @@
 	cd webroot;
 	php main.php start|stop|restart|reload
 	访问IP:PORT
-##ab测试
+##ab测试-本机裸跑输出
 ![本机裸跑输出](https://raw.githubusercontent.com/keaixiaou/pic/master/test2.jpg)
 
 ###目录结构
