@@ -11,6 +11,9 @@ function table($tableName){
     return \ZPHP\Db\Db::getInstance()->table($tableName);
 }
 
+function collection($collectionName){
+    return \ZPHP\Db\Db::collection($collectionName);
+}
 
 function cache($key, $value='', $expire=3600){
     $cache = \ZPHP\Cache\Factory::getInstance();
