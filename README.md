@@ -1,5 +1,6 @@
 
-# sphp-根据zphp改造专门用来做http服务的轻量级框架
+# zhttp-根据zphp改造专门用来做http服务的轻量级框架
+(当前只用来做app接口用)
 
 ##运行demo
 
