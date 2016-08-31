@@ -2,7 +2,7 @@
 use ZPHP\ZPHP;
 
 define("ROOTPATH", dirname(__DIR__));
-define('DEBUG',true);
+define('DEBUG',false);
 require  ROOTPATH.'/ZPHP/ZPHP.php';
 
 ZPHP::run(ROOTPATH);
