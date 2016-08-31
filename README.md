@@ -9,6 +9,10 @@
 	cd webroot;
 	php main.php start|stop|restart|reload
 	访问IP:PORT
+	建议：
+		如果是静态文件，可以直接用nginx代理
+		如果是动态请求，最好使用nginx做代理转发
+		
 ##ab测试-本机裸跑输出
 ![本机裸跑输出](https://raw.githubusercontent.com/keaixiaou/pic/master/test2.jpg)
 
