@@ -19,14 +19,6 @@ class SwooleHttp extends ZSwooleHttp
 
     public function onRequest($request, $response)
     {
-//        $this->currentRequest = $request;
-//        $this->responses[$response->fd] = $response;
-//        if(count($this->responses)>1){
-//            Log::write('responses  in server is more than 1:'.json_encode($this->responses));
-//        }
-
-        $this->currentResponse = $response;
-
         ob_start();
         try {
             $mvc = Config::getField('project','mvc');
@@ -68,7 +60,8 @@ class SwooleHttp extends ZSwooleHttp
 
             }catch(\Exception $e){
                 $response->status(500);
-                echo Swoole::info($e->getMessage());
+                $msg = DEBUG===true?$e->getMessage():'服务器升空了!';
+                echo Swoole::info($msg);
             }
 
 
@@ -80,15 +73,16 @@ class SwooleHttp extends ZSwooleHttp
             echo Swoole::info(Response::$HTTP_HEADERS[$e->getMessage()]);
         }
         $result = ob_get_contents();
-
+//        Log::write('result:'.json_encode($result));
         ob_end_clean();
         if(!empty($controller->is_api)){
             $response->header('Content-Type', 'application/json');
         }
 
-//        $response->cookie('zphp',md5('zphp'));
+
         $response->end($result);
     }
+
 
     public function onWorkerStart($server, $workerId)
     {

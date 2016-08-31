@@ -13,5 +13,6 @@
 //                    'persistent' => true, //MySQL长连接
                     'use_proxy'  => false,  //启动读写分离Proxy
                     ]
-            )
+            ),
+
     );

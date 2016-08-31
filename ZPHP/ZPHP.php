@@ -117,7 +117,7 @@ class ZPHP
 
     final public static function exceptionHandler($exception)
     {
-        echo Formater::exception($exception);
+        echo Response::display(Formater::exception($exception));
 //        return Response::display(Formater::exception($exception));
     }
 
@@ -156,18 +156,11 @@ class ZPHP
             defined('DS') || define('DS', DIRECTORY_SEPARATOR);
             self::$zPath = $rootPath;
             self::setRootPath($rootPath);
-            if (empty($configPath)) {
-                $configPath = 'socket_http';
-//            if (!empty($_SERVER['HTTP_HOST'])) {
-//                $configPath = \str_replace(':', '_', $_SERVER['HTTP_HOST']);
-//            } elseif (!empty($_SERVER['argv'][1])) {
-//                $configPath = $_SERVER['argv'][1];
-//            }
-            }
-            self::setConfigPath($configPath);
+            self::setConfigPath('');
 
             \spl_autoload_register(__CLASS__ . '::autoLoader');
             $config_path = self::getConfigPath();
+//            echo $config_path;die;
 //            Config::load($config_path);
             Config::load($config_path);
             //设置项目lib目录
@@ -188,7 +181,6 @@ class ZPHP
 
             $timeZone = Config::get('time_zone', 'Asia/Shanghai');
             \date_default_timezone_set($timeZone);
-
             if (PHP_OS == 'WINNT')
             {
                 self::setOs(new Windows());

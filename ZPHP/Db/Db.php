@@ -31,14 +31,14 @@ class Db {
 
 
     public static function table($tableName='', $db_key = 'master'){
-        $model = new Model(self::getInstance(),$db_key);
-        $model->table = $tableName;
-        return $model;
-//        if(!isset(self::$_tables[$tableName])){
-//            self::$_tables[$tableName] = new Model(self::getInstance(),$db_key);
-//            self::$_tables[$tableName]->table = $tableName;
-//        }
-//        return self::$_tables[$tableName];
+//        $model = new Model(self::getInstance(),$db_key);
+//        $model->table = $tableName;
+//        return $model;
+        if(!isset(self::$_tables[$tableName])){
+            self::$_tables[$tableName] = new Model(self::getInstance(),$db_key);
+            self::$_tables[$tableName]->table = $tableName;
+        }
+        return self::$_tables[$tableName];
     }
 
 

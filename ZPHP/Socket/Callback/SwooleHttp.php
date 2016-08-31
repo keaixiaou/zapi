@@ -62,6 +62,7 @@ abstract class SwooleHttp extends CSwoole
             default:
                 return;
         }
+
         $this->errorResponse($error);
     }
 
@@ -83,6 +84,7 @@ abstract class SwooleHttp extends CSwoole
     public function errorResponse($error){
 
         $errorMsg = DEBUG===true?"{$error['message']} ({$error['file']}:{$error['line']})":'application internal error!';
+        Log::write('error:'.$errorMsg);
         $this->currentResponse->status(500);
         $this->currentResponse->end(Swoole::info($errorMsg));
 //        $this->responses[$this->currentRequest->fd]->status(500);
