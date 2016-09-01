@@ -3,11 +3,11 @@
     return array(
             'db'=>array(
                 'master'=>[
-                    'dsn'=>'mysql:host=120.27.143.217;port=3306;dbname=jeekzx',
+                    'dsn'=>'mysql:host=127.0.0.1;port=3306;dbname=jeekzx',
                     'type' => 'pdo',
 
                     'user'       => "jeekzx",
-                    'password'     => "7f331f",
+                    'password'     => "123456",
                     'charset'    => "utf8",
                     'setname'    => true,
 //                    'persistent' => true, //MySQL长连接
