@@ -17,7 +17,7 @@ abstract class Log {
     const NOTICE  = 2;
     const WARN    = 3;
     const ERROR   = 4;
-
+    private static $log;
 
     protected static $level_str = array(
         'TRACE',
@@ -30,14 +30,21 @@ abstract class Log {
 
     //写日志
     static public function write($msg, $level=self::ERROR){
-        $file_path = ZPHP::getRootPath().'/log/app';
-        if(!is_dir($file_path)){
-            mkdir($file_path, 0755, true);
-        }
-        $file_name = $file_path.'/'.date('Y-m-d').'.log';
         $level_str = self::$level_str[$level];
-//        $msg = date()
-        error_log(date('Y-m-d H:i:s')." {$level_str}-".$msg."\n", 3, $file_name);
+        $message = date('Y-m-d H:i:s')." {$level_str}-".$msg."\n";
+        self::$log[] = $message;
+        if(count(self::$log)>=10){
+            $str = implode("", self::$log);
+            $file_path = ZPHP::getRootPath().'/log/app';
+            if(!is_dir($file_path)){
+                mkdir($file_path, 0755, true);
+            }
+            $file_name = $file_path.'/'.date('Y-m-d').'.log';
+
+            error_log($str, 3, $file_name);
+            self::$log = [];
+        }
+
     }
 }
 
