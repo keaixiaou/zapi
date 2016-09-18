@@ -48,9 +48,6 @@ class SwooleHttp extends ZSwooleHttp
                     $mvc['action'] = $url_array[2];
                 };
             }
-            $mvc['module'] = 'Home';
-            $mvc['controller'] = 'Index';
-            $mvc['action'] = 'index';
             $controllerClass = Config::get('ctrl_path', 'controllers') . '\\'
                 .ucwords($mvc['module']).'\\'.ucwords($mvc['controller']);
             $FController = Factory::getInstance($controllerClass);
@@ -65,13 +62,15 @@ class SwooleHttp extends ZSwooleHttp
             }
             $controller->method= $action;
             $controller->response = $response;
-            $action = 'apiStart';
             try{
-                $generator = call_user_func([$controller, $action]);
+                $generator = call_user_func([$controller, $controller->method]);
                 if ($generator instanceof \Generator) {
+                    $action = 'coroutineApiStart';
+                    $generator = call_user_func([$controller, $action]);
                     $generator->controller = $controller;
                     $this->coroutine->start($generator);
                 }
+
                 unset($controller);
             }catch(\Exception $e){
                 $response->status(500);

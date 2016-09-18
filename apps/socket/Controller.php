@@ -17,10 +17,18 @@ class Controller {
     public $method;
 
     public function apiStart(){
-        $result = yield call_user_func([$this, $this->method]);
+        $result = call_user_func([$this, $this->method]);
+        $result = json_encode($result);
         Log::write('result:'.($result));
         $this->response->end($result);
 
     }
 
+
+    public function coroutineApiStart(){
+        $result = yield call_user_func([$this, $this->method]);
+        $result = json_encode($result);
+        Log::write('result:'.($result));
+        $this->response->end($result);
+    }
 }

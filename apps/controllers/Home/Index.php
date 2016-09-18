@@ -23,12 +23,14 @@ use ZPHP\Model\Model;
 class Index extends Controller{
     public function index(){
 
-
+        //协程的action
         $sql= 'select * from admin_user where id=1';
         $data = Db::table()->query($sql);
         $res = (yield $data);
         $res['aaa'] = 111;
-        return json_encode($res);
+        return $res;
+        //非协程的action
+        $this->response->end('hello world');
 //        echo json_encode($res);
 //        $result = json_encode($res);
 //        Log::write('response:'.json_encode($this->response).';result:'.$result);
