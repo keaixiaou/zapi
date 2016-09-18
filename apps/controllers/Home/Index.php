@@ -30,7 +30,9 @@ class Index extends Controller{
         $res['aaa'] = 111;
         return $res;
         //非协程的action
-        $this->response->end('hello world');
+//        $res['aaa'] = 111;
+//        return $res;
+//        $this->response->end('hello world');
 //        echo json_encode($res);
 //        $result = json_encode($res);
 //        Log::write('response:'.json_encode($this->response).';result:'.$result);

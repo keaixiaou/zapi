@@ -16,13 +16,6 @@ class Controller {
     public $response;
     public $method;
 
-    public function apiStart(){
-        $result = call_user_func([$this, $this->method]);
-        $result = json_encode($result);
-        Log::write('result:'.($result));
-        $this->response->end($result);
-
-    }
 
 
     public function coroutineApiStart(){
@@ -30,5 +23,9 @@ class Controller {
         $result = json_encode($result);
         Log::write('result:'.($result));
         $this->response->end($result);
+    }
+
+    public function onExceptionHandle(\Exception $e){
+        $this->response->end($e->getMessage());
     }
 }

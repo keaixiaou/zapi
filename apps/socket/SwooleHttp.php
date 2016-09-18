@@ -8,6 +8,7 @@ use ZPHP\Core\Config;
 use ZPHP\Core\Log;
 use ZPHP\Core\Swoole;
 use ZPHP\Pool\Base\Coroutine;
+use ZPHP\Pool\Base\CoroutineTask;
 use ZPHP\Protocol\Response;
 use ZPHP\Socket\Callback\SwooleHttp as ZSwooleHttp;
 use ZPHP\Socket\IClient;
@@ -62,15 +63,13 @@ class SwooleHttp extends ZSwooleHttp
             }
             $controller->method= $action;
             $controller->response = $response;
+            $action = 'coroutineApiStart';
             try{
-                $generator = call_user_func([$controller, $controller->method]);
+                $generator = call_user_func([$controller, $action]);
                 if ($generator instanceof \Generator) {
-                    $action = 'coroutineApiStart';
-                    $generator = call_user_func([$controller, $action]);
                     $generator->controller = $controller;
                     $this->coroutine->start($generator);
                 }
-
                 unset($controller);
             }catch(\Exception $e){
                 $response->status(500);

@@ -21,6 +21,7 @@ class CoroutineTask{
         $this->stack = new \SplStack();
     }
 
+
     /**
      * [run 协程调度]
      * @return [type]         [description]
@@ -40,8 +41,14 @@ class CoroutineTask{
                 $routine = $value;
                 return;
             }
+
             if ($value != null) {
-                $result = $value->getResult();
+
+                if(method_exists($value, 'getResult')) {
+                    $result = $value->getResult();
+                }else{
+                    $result = $value;
+                }
                 if ($result !== CoroutineResult::getInstance()) {
                     $routine->send($result);
                 }
@@ -55,7 +62,6 @@ class CoroutineTask{
                 $routine->next();
             }
         } catch (\Exception $e) {
-            Log::write('message:'.$e->getMessage());
             while (!$this->stack->isEmpty()) {
                 $this->routine = $this->stack->pop();
                 try {
