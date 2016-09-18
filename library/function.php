@@ -8,11 +8,11 @@
 
 
 function table($tableName){
-    return \ZPHP\Db\Db::getInstance()->table($tableName);
+    return \ZPHP\Core\Db::getInstance()->table($tableName);
 }
 
 function collection($collectionName){
-    return \ZPHP\Db\Db::collection($collectionName);
+    return \ZPHP\Core\Db::collection($collectionName);
 }
 
 function cache($key, $value='', $expire=3600){

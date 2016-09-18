@@ -2,31 +2,33 @@
 
 namespace socket;
 
-use library\help;
-use ZPHP\Common\Formater;
+use ZPHP\Core\Db;
 use ZPHP\Core\Factory;
 use ZPHP\Core\Config;
 use ZPHP\Core\Log;
 use ZPHP\Core\Swoole;
-use ZPHP\Protocol\Request;
+use ZPHP\Pool\Base\Coroutine;
 use ZPHP\Protocol\Response;
 use ZPHP\Socket\Callback\SwooleHttp as ZSwooleHttp;
 use ZPHP\Socket\IClient;
-use ZPHP\Core\Route as ZRoute;
 
 class SwooleHttp extends ZSwooleHttp
 {
 
+    /**
+     * @var Coroutine
+     */
+    protected $coroutine;
     public function onRequest($request, $response)
     {
         $this->currentResponse = $response;
         ob_start();
         try {
             $mvc = Config::getField('project','mvc');
-            $uri = $request->server['request_uri'];
-            if(strpos($uri,'.')!==false){
-                throw new \Exception(403);
-            }
+            $uri = $request->server['path_info'];
+//            if(strpos($uri,'.')!==false){
+//                throw new \Exception(403);
+//            }
             $url_array = explode('/', $uri);
             if(!isset($url_array[2])){
                 if(!empty($url_array[0])){
@@ -46,19 +48,31 @@ class SwooleHttp extends ZSwooleHttp
                     $mvc['action'] = $url_array[2];
                 };
             }
-            $controller_class = Config::get('ctrl_path', 'controllers') . '\\'
+            $mvc['module'] = 'Home';
+            $mvc['controller'] = 'Index';
+            $mvc['action'] = 'index';
+            $controllerClass = Config::get('ctrl_path', 'controllers') . '\\'
                 .ucwords($mvc['module']).'\\'.ucwords($mvc['controller']);
-            $controller = Factory::getInstance($controller_class);
+            $FController = Factory::getInstance($controllerClass);
+
             if(!empty(Config::getField('project','reload'))&& extension_loaded('runkit')){
-                $controller = Factory::reload($controller_class);
+                $FController = Factory::reload($controllerClass);
             }
-            $action = !empty($controller->is_api)?'apiStart':$mvc['action'];
+            $controller = clone $FController;
+            $action = $mvc['action'];
             if(!method_exists($controller, $action)){
                 throw new \Exception(404);
             }
+            $controller->method= $action;
+            $controller->response = $response;
+            $action = 'apiStart';
             try{
-                call_user_func([$controller,$action]);
-
+                $generator = call_user_func([$controller, $action]);
+                if ($generator instanceof \Generator) {
+                    $generator->controller = $controller;
+                    $this->coroutine->start($generator);
+                }
+                unset($controller);
             }catch(\Exception $e){
                 $response->status(500);
                 $msg = DEBUG===true?$e->getMessage():'服务器升空了!';
@@ -74,20 +88,37 @@ class SwooleHttp extends ZSwooleHttp
             echo Swoole::info(Response::$HTTP_HEADERS[$e->getMessage()]);
         }
         $result = ob_get_contents();
-//        Log::write('result:'.json_encode($result));
         ob_end_clean();
-        if(!empty($controller->is_api)){
-            $response->header('Content-Type', 'application/json');
+//        if(!empty($controller->is_api)){
+//            $response->header('Content-Type', 'application/json');
+//        }
+
+        if(!empty($result)) {
+            $response->end($result);
         }
-
-
-        $response->end($result);
     }
 
 
+    /**
+     * @param $server
+     * @param $workerId
+     * @throws \Exception
+     */
     public function onWorkerStart($server, $workerId)
     {
         parent::onWorkerStart($server, $workerId);
+        $common = Config::get('common_file');
+        if(!empty($common)){
+            require ROOTPATH.$common;
+        }
+        if (!$server->taskworker) {//worker进程启动协程调度器
+            $this->coroutine = new Coroutine();
+        }
+
+        if(!$server->taskworker) {
+            Db::getInstance()->initMysqlPool($workerId);
+        }
+
     }
 
 }

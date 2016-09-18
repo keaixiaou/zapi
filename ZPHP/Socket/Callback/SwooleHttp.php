@@ -3,7 +3,7 @@
 
 namespace ZPHP\Socket\Callback;
 
-use ZPHP\Core,
+use ZPHP\Core\Db,
     ZPHP\Core\Config,
     ZPHP\Core\Swoole,
     ZPHP\Core\Log;
@@ -15,8 +15,6 @@ abstract class SwooleHttp extends CSwoole
 {
 
     protected $currentResponse;
-//    protected $responses;//同步一次只接受一个请求,后续需要测试异步是一次性接受几个request
-//    protected $currentRequest;
 
     public function onReceive()
     {
@@ -29,10 +27,6 @@ abstract class SwooleHttp extends CSwoole
         Protocol\Request::setHttpServer(1);
         set_error_handler(array($this, 'onErrorHandle'), E_USER_ERROR);
         register_shutdown_function(array($this, 'onErrorShutDown'));
-        $common = Config::get('common_file');
-        if(!empty($common)){
-            require ROOTPATH.$common;
-        }
     }
 
 
@@ -87,13 +81,10 @@ abstract class SwooleHttp extends CSwoole
         Log::write('error:'.$errorMsg);
         $this->currentResponse->status(500);
         $this->currentResponse->end(Swoole::info($errorMsg));
-//        $this->responses[$this->currentRequest->fd]->status(500);
-//        $this->responses[$this->currentRequest->fd]->end(Swoole::info($errorMsg));
         $this->afterResponese();
     }
 
     protected function afterResponese(){
-//        unset($this->responses[$this->currentRequest->fd]);
         if (ob_get_contents()) ob_end_clean();
     }
 

@@ -13,9 +13,14 @@ namespace ZPHP\Model;
 
 use ZPHP\Core\Log;
 use ZPHP\Db\Db;
+use ZPHP\Pool\Base\CoroutineResult;
+use ZPHP\Pool\Base\MysqlAsynPool;
+use ZPHP\Pool\MySqlCoroutine;
 
 class Model {
 
+
+    public $mysqlPool;
     public $db;
     public $table='';
     public $select='*';
@@ -33,24 +38,29 @@ class Model {
     // 数据库表达式
     protected $exp = array('eq'=>'=','neq'=>'<>','gt'=>'>','egt'=>'>=','lt'=>'<','elt'=>'<=','notlike'=>'NOT LIKE','like'=>'LIKE','in'=>'IN','notin'=>'NOT IN','not in'=>'NOT IN','between'=>'BETWEEN','not between'=>'NOT BETWEEN','notbetween'=>'NOT BETWEEN');
 
-    function __construct(Db $Db, $db_key = 'master'){
-        $this->db = $Db->getDb($db_key);
+//    function __construct(Db $Db, $db_key = 'master'){
+//        $this->db = $Db->getDb($db_key);
+//    }
+
+    function __construct($mysqlPool){
+        $this->mysqlPool = $mysqlPool;
     }
 
 
     //执行查询部分
     public function query($sql){
-        $sql = trim($sql);
-        Db::getInstance()->setSql($sql);
-        $pdo = $this->db->prepare($sql);
-        $res = $pdo->execute();
-        if($res){
-            $data =  strtolower($sql[0])!=='s'?$pdo->rowCount():$pdo->fetchall();
-            $pdo->closeCursor();
-            return $data;
-        }else{
-            return $res;
-        }
+        $_sql = trim($sql);
+        return new MySqlCoroutine($this->mysqlPool, null, $_sql);
+//        Db::getInstance()->setSql($sql);
+//        $pdo = $this->db->prepare($sql);
+//        $res = $pdo->execute();
+//        if($res){
+//            $data =  strtolower($sql[0])!=='s'?$pdo->rowCount():$pdo->fetchall();
+//            $pdo->closeCursor();
+//            return $data;
+//        }else{
+//            return $res;
+//        }
     }
 
 
@@ -186,9 +196,10 @@ class Model {
      */
     public function find(){
         $this->limit(1);
-        $data = $this->query($this->makesql());
+        return $this->get();
+//        $data = $this->query($this->makesql());
 //        Log::write('data:'.json_encode($data));
-        return empty($data[0])?null:$data[0];
+//        return empty($data[0])?null:$data[0];
     }
 
 

@@ -7,36 +7,59 @@
  */
 
 
-namespace ZPHP\Db;
+namespace ZPHP\Core;
 
-use ZPHP\Core\Config;
+use ZPHP\Db\Mongo;
 use ZPHP\Model\Model;
+use ZPHP\Pool\MysqlAsynPool;
 
 class Db {
+    /**
+     * @var MysqlAsynPool
+     */
+    public $mysqlPool;
+
     public static $instance;
     protected static $db;
     protected static $_tables;
     protected static $_collection;
     private static $lastSql;
 
-    function __construct($db_key='master'){
-
+    private function __construct(){
+        self::$instance = & $this;
     }
 
+    /**
+     * @return Db
+     */
     public static function getInstance(){
-        if(!self::$instance){
-            self::$instance = new Db;
+        if(!isset(self::$instance)){
+            self::$instance = new Db();
         }
         return self::$instance;
     }
 
 
+    /**
+     * @param $workId
+     * 初始化mysql连接池
+     */
+    static public function initMysqlPool($workId){
+        if(empty(self::$instance->mysqlPool)) {
+            self::$instance->mysqlPool = new MysqlAsynPool();
+            self::$instance->mysqlPool->initWorker($workId);
+        }
+    }
+
+
+    /**
+     * @param string $tableName
+     * @param string $db_key
+     * @return Model
+     */
     public static function table($tableName='', $db_key = 'master'){
-//        $model = new Model(self::getInstance(),$db_key);
-//        $model->table = $tableName;
-//        return $model;
         if(!isset(self::$_tables[$tableName])){
-            self::$_tables[$tableName] = new Model(self::getInstance(),$db_key);
+            self::$_tables[$tableName] = new Model(self::$instance->mysqlPool);
             self::$_tables[$tableName]->table = $tableName;
         }
         return self::$_tables[$tableName];
@@ -60,6 +83,12 @@ class Db {
         return self::$_collection[$collectName];
     }
 
+    /**
+     * pdo 查询获取pdo
+     * @param string $db_key
+     * @return mixed
+     * @throws \Exception
+     */
     public function getDb($db_key= 'master'){
         if(!isset(self::$db[$db_key])){
             $config = Config::getField('db', $db_key);

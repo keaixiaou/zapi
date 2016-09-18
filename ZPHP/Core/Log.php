@@ -31,19 +31,19 @@ abstract class Log {
     //写日志
     static public function write($msg, $level=self::ERROR){
         $level_str = self::$level_str[$level];
-        $message = date('Y-m-d H:i:s')." {$level_str}-".$msg."\n";
+        $timeArray = explode(' ', microtime());
+        $message = date('Y-m-d H:i:s').substr($timeArray[0],1)." {$level_str}-".$msg."\n";
         self::$log[] = $message;
-        if(count(self::$log)>=10){
-            $str = implode("", self::$log);
-            $file_path = ZPHP::getRootPath().'/log/app';
-            if(!is_dir($file_path)){
-                mkdir($file_path, 0755, true);
-            }
-            $file_name = $file_path.'/'.date('Y-m-d').'.log';
-
-            error_log($str, 3, $file_name);
-            self::$log = [];
+        if(DEBUG!==true && count(self::$log)<10)return;
+        $str = implode("", self::$log);
+        $file_path = ZPHP::getRootPath().'/log/app';
+        if(!is_dir($file_path)){
+            mkdir($file_path, 0755, true);
         }
+        $file_name = $file_path.'/'.date('Y-m-d').'.log';
+
+        error_log($str, 3, $file_name);
+        self::$log = [];
 
     }
 }

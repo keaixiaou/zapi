@@ -58,13 +58,8 @@ abstract class Swoole implements ICallback
      */
     public function onManagerStart($server)
     {
-        Core\Log::write('managestart');
         swoole_set_process_name(ZConfig::get('project_name') .
             ' server manager:' . $server->manager_pid);
-//        $pidPath = ZConfig::getField('project', 'pid_path');
-//        if (!empty($pidPath)) {
-//            file_put_contents($pidPath . DS . ZConfig::get('project_name') . '_manager.pid', $server->manager_pid);
-//        }
     }
 
     /**
