@@ -20,6 +20,9 @@
 ##ab测试-本机裸跑输出
 ![本机裸跑输出](https://raw.githubusercontent.com/keaixiaou/pic/master/test2.jpg)
 
+##ab测试-本机查询mysql，一个work进程，4个链接mysql连接池
+![本机查询mysql](https://raw.githubusercontent.com/keaixiaou/base/master/swoole3.jpeg)
+
 ###目录结构
 ![目录结构](https://raw.githubusercontent.com/keaixiaou/pic/master/test1.jpg)
 
