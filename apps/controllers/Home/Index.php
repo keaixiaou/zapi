@@ -22,6 +22,10 @@ use ZPHP\Model\Model;
 
 class Index extends Controller{
     public function index(){
+        $service = new TestService();
+        $sql =  $service->test();
+        $res = yield Db::table()->query($sql);
+        return $res;
         //协程的action
 //        $sql = new \Swoole\Client\MYSQL(array(
 //            'host' => '120.27.143.217',
@@ -33,11 +37,12 @@ class Index extends Controller{
 //        $ret = (yield $sql ->query('show tables'));
 //        return $ret;
 
-        $sql= 'select * from admin_user where id=1';
-        $res = yield Db::table()->query($sql);
-        return $res;
+//        $sql= 'select * from admin_user where id=1';
+//        $res = yield Db::table()->query($sql);
+//        return $res;
         //非协程的action
 //        $res['aaa'] = 111;
+//        Log::write(111);
 //        return $res;
 //        $this->response->end('hello world');
 //        echo json_encode($res);

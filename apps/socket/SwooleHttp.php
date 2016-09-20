@@ -66,7 +66,6 @@ class SwooleHttp extends ZSwooleHttp
             $action = 'coroutineApiStart';
             try{
                 $generator = call_user_func([$controller, $action]);
-                Log::write('start call request');
                 if ($generator instanceof \Generator) {
                     $task = new CoroutineTask($generator);
                     $task->work($task->getRoutine());

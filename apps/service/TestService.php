@@ -10,6 +10,6 @@ namespace service;
 
 class TestService{
     public function test(){
-        return 'test';
+        return 'select * from admin_user where id=1';
     }
 }

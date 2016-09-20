@@ -47,25 +47,30 @@ class CoroutineTask{
                     return;
                 }
 
-                if($value===null) {
-                    if (!$this->stack->isEmpty()) {
-                        $routine = $this->stack->pop();
-                        $routine->send($this->callbackData);
-                        continue;
-                    } else {
-                        if(!$this->routine->valid()){
-                            return;
-                        }else{
-                            continue;
-                        }
-                    }
-                }
                 if ($value instanceof Swoole\Coroutine\RetVal) {
 
                     // end yeild
                     Log::write(__METHOD__ . " yield end words == " . print_r($value, true), __CLASS__);
                     return false;
                 }
+
+                if($value===null) {
+                    if (!$this->stack->isEmpty()) {
+                        $routine = $this->stack->pop();
+                        $routine->send($this->callbackData);
+                        continue;
+                    } else {
+                        if (!$this->routine->valid()) {
+                            return;
+                        } else {
+                            $this->routine->next();
+                            continue;
+                        }
+                    }
+                }else{
+                    $this->routine->send($value);
+                }
+
             } catch (\Exception $e) {
                 while (!$this->stack->isEmpty()) {
                     $routine = $this->stack->pop();
