@@ -9,7 +9,7 @@
 namespace ZPHP\Pool\Base;
 interface ICoroutineBase
 {
-    function send($callback);
+    function send(callable $callback);
 
     function getResult();
 }

@@ -22,12 +22,19 @@ use ZPHP\Model\Model;
 
 class Index extends Controller{
     public function index(){
-
         //协程的action
+//        $sql = new \Swoole\Client\MYSQL(array(
+//            'host' => '120.27.143.217',
+//            'port' => 3306,
+//            'user' => 'jeekzx',
+//            'password' => '7f331f',
+//            'database' => 'jeekzx',
+//            'charset' => 'utf-8',));
+//        $ret = (yield $sql ->query('show tables'));
+//        return $ret;
+
         $sql= 'select * from admin_user where id=1';
-        $data = Db::table()->query($sql);
-        $res = (yield $data);
-        $res['aaa'] = 111;
+        $res = yield Db::table()->query($sql);
         return $res;
         //非协程的action
 //        $res['aaa'] = 111;

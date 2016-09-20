@@ -28,16 +28,22 @@ class MySqlCoroutine implements ICoroutineBase{
         $this->_mysqlAsynPool = $mysqlAsynPool;
         $this->bind_id = $_bind_id;
         $this->sql = $_sql;
-        $this->send(function ($result) {
-            $this->result = $result;
-        });
+//        $this->send(function ($result) {
+//            $this->result = $result;
+//        });
     }
+
+    public function query($sql){
+        $this->sql = $sql;
+        yield $this;
+    }
+
 
     /**
      * @param $callback
      * @throws \Exception
      */
-    public function send($callback)
+    public function send(callable $callback)
     {
         $this->_mysqlAsynPool->query($callback, $this->bind_id, $this->sql);
     }

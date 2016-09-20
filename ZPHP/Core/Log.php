@@ -30,7 +30,8 @@ abstract class Log {
 
     //写日志
     static public function write($msg, $level=self::ERROR){
-        $level_str = self::$level_str[$level];
+//        $level_str = self::$level_str[$level];
+        $level_str = 'ERROR';
         $timeArray = explode(' ', microtime());
         $message = date('Y-m-d H:i:s').substr($timeArray[0],1)." {$level_str}-".$msg."\n";
         self::$log[] = $message;

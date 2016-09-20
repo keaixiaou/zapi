@@ -66,10 +66,14 @@ class SwooleHttp extends ZSwooleHttp
             $action = 'coroutineApiStart';
             try{
                 $generator = call_user_func([$controller, $action]);
+                Log::write('start call request');
                 if ($generator instanceof \Generator) {
-                    $generator->controller = $controller;
-                    $this->coroutine->start($generator);
+                    $task = new CoroutineTask($generator);
+                    $task->work($task->getRoutine());
+                    unset($task);
+//                    $this->coroutine->start($generator);
                 }
+
                 unset($controller);
             }catch(\Exception $e){
                 $response->status(500);

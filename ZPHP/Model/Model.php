@@ -20,7 +20,12 @@ use ZPHP\Pool\MySqlCoroutine;
 class Model {
 
 
+    /**
+     * @var MysqlAsynPool
+     */
     public $mysqlPool;
+
+
     public $db;
     public $table='';
     public $select='*';
@@ -50,17 +55,8 @@ class Model {
     //执行查询部分
     public function query($sql){
         $_sql = trim($sql);
-        return new MySqlCoroutine($this->mysqlPool, null, $_sql);
-//        Db::getInstance()->setSql($sql);
-//        $pdo = $this->db->prepare($sql);
-//        $res = $pdo->execute();
-//        if($res){
-//            $data =  strtolower($sql[0])!=='s'?$pdo->rowCount():$pdo->fetchall();
-//            $pdo->closeCursor();
-//            return $data;
-//        }else{
-//            return $res;
-//        }
+        $mysqlCoroutine =  new MySqlCoroutine($this->mysqlPool, null, $_sql);
+        yield $mysqlCoroutine->query($_sql);
     }
 
 

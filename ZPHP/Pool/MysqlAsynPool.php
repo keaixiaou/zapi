@@ -48,7 +48,7 @@ class MysqlAsynPool extends AsynPool{
      * @param $bind_id 绑定的连接id，用于事务
      * @param $sql
      */
-    public function query($callback, $bind_id = null, $sql = null)
+    public function query(callable $callback, $bind_id = null, $sql = null)
     {
 //        if ($sql == null) {
 //            $sql = $this->dbQueryBuilder->makeSql(false);
