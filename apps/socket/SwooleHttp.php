@@ -26,9 +26,9 @@ class SwooleHttp extends ZSwooleHttp
         try {
             $mvc = Config::getField('project','mvc');
             $uri = $request->server['path_info'];
-//            if(strpos($uri,'.')!==false){
-//                throw new \Exception(403);
-//            }
+            if(strpos($uri,'.')!==false){
+                throw new \Exception(403);
+            }
             $url_array = explode('/', $uri);
             if(!isset($url_array[2])){
                 if(!empty($url_array[0])){
@@ -69,6 +69,7 @@ class SwooleHttp extends ZSwooleHttp
                     $task = new CoroutineTask($generator);
                     $task->work($task->getRoutine());
                     unset($task);
+                    Log::write('after request');
 //                    $this->coroutine->start($generator);
                 }
                 unset($controller);

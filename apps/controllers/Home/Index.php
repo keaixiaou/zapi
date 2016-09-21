@@ -16,20 +16,24 @@ use ZPHP\Controller\Apicontroller;
 use ZPHP\Core\Config;
 use ZPHP\Core\Log;
 use ZPHP\Core\Db;
+use ZPHP\Coroutine\Http\HttpClientCoroutine;
 use ZPHP\Db\Mongo;
 use ZPHP\Manager\Redis;
 use ZPHP\Model\Model;
 
 class Index extends Controller{
     public function index(){
-        $service = new TestService();
-        $sql =  $service->test();
-        $user1 = yield Db::table()->query($sql);
-//        $user2 = yield table('')->query('select *from admin_user where id =2');
+        $httpClient = new HttpClientCoroutine();
+        $data = yield $httpClient->request('http://speak.test.com/');
+//        $service = new TestService();
+//        $sql =  $service->test();
+//        $user1 = yield Db::table()->query($sql);
+        $user2 = yield table('')->query('select *from admin_user where id =2');
 //
-//        $res['user2'] = $user2;
+        $res['user2'] = $user2;
 
-        return $user1;
+        $res['body'] =$data;
+        return $res;
         //协程的action
 //        $sql = new \Swoole\Client\MYSQL(array(
 //            'host' => '120.27.143.217',
