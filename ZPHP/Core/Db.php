@@ -52,6 +52,12 @@ class Db {
     }
 
 
+    static public function freeMysqlPool(){
+        self::$instance->mysqlPool->freeCallback();
+        unset(self::$instance->mysqlPool);
+//        unset(self::$instance);
+    }
+
     /**
      * @param string $tableName
      * @param string $db_key

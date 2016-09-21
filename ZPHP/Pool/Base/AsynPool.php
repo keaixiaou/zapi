@@ -15,7 +15,7 @@ use ZPHP\Core\Log;
 
 abstract class AsynPool implements IAsynPool
 {
-    const MAX_TOKEN = 655360;
+    const MAX_TOKEN = 650000;
     protected $commands;
     protected $pool;
     protected $callBacks;
@@ -60,23 +60,13 @@ abstract class AsynPool implements IAsynPool
     {
         $callback = $this->callBacks[$data['token']];
         unset($this->callBacks[$data['token']]);
+//        Log::write(__METHOD__.print_r($this->pool));
         if ($callback != null) {
             call_user_func_array($callback, ['data'=>$data['result']]);
 //            call_user_func($callback, $data['result']);
         }
     }
 
-    /**
-     * @param $swoole_server
-     * @param $asyn_manager
-     */
-    public function initServer($swoole_server, $asyn_manager)
-    {
-//        $this->config = $swoole_server->config;
-//        $this->swoole_server = $swoole_server;
-//        $this->server = $swoole_server->server;
-//        $this->asyn_manager = $asyn_manager;
-    }
 
     /**
      * @param $workerid
@@ -94,9 +84,16 @@ abstract class AsynPool implements IAsynPool
     {
         $this->prepareLock = false;
         $this->pool->push($client);
-        if (count($this->commands) > 0) {//有残留的任务
-            $command = $this->commands->shift();
+        if (!$this->commands->isEmpty()) {//有残留的任务
+            $command = $this->commands->dequeue();
             $this->execute($command);
         }
+    }
+
+    /**
+     *
+     */
+    public function freeCallback(){
+        unset($this->callBacks);
     }
 }

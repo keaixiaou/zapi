@@ -18,14 +18,29 @@ class Controller {
 
 
 
+    /**
+     * api接口请求总入口
+     *
+    */
     public function coroutineApiStart(){
         $result = yield call_user_func([$this, $this->method]);
         $result = json_encode($result);
         Log::write('result:'.($result),Log::INFO);
         $this->response->end($result);
+        $this->destroy();
     }
 
+    /**
+     * 异常处理
+     */
     public function onExceptionHandle(\Exception $e){
-        $this->response->end($e->getMessage());
+        $msg = DEBUG===true?$e->getMessage():'服务器升空了!';
+        $this->response->end(Swoole::info($msg));
+        $this->destroy();
+    }
+
+
+    protected function destroy(){
+        unset($this->response);
     }
 }

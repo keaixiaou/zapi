@@ -24,8 +24,12 @@ class Index extends Controller{
     public function index(){
         $service = new TestService();
         $sql =  $service->test();
-        $res = yield Db::table()->query($sql);
-        return $res;
+        $user1 = yield Db::table()->query($sql);
+//        $user2 = yield table('')->query('select *from admin_user where id =2');
+//
+//        $res['user2'] = $user2;
+
+        return $user1;
         //协程的action
 //        $sql = new \Swoole\Client\MYSQL(array(
 //            'host' => '120.27.143.217',
@@ -42,8 +46,8 @@ class Index extends Controller{
 //        return $res;
         //非协程的action
 //        $res['aaa'] = 111;
-//        Log::write(111);
 //        return $res;
+//        echo json_encode($res);
 //        $this->response->end('hello world');
 //        echo json_encode($res);
 //        $result = json_encode($res);

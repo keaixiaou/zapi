@@ -33,14 +33,17 @@ class CoroutineTask{
                     return;
                 }
                 $value = $routine->current();
+//                Log::write(__METHOD__.print_r($value, true));
                 //嵌套的协程
                 if ($value instanceof \Generator) {
+//                    Log::write('嵌套');
                     $this->stack->push($routine);
                     $routine = $value;
                     continue;
                 }
 
 
+                //异步IO的父类
                 if(is_subclass_of($value, 'ZPHP\Pool\Base\ICoroutineBase')){
                     $this->stack->push($routine);
                     $value->send([$this, 'callback']);
@@ -55,6 +58,11 @@ class CoroutineTask{
                 }
 
                 if($value===null) {
+                    $return = $routine->getReturn();
+                    if(!empty($return)){
+                        $this->callbackData = $return;
+                    }
+//                    Log::write('return:'.__METHOD__.print_r($return, true));
                     if (!$this->stack->isEmpty()) {
                         $routine = $this->stack->pop();
                         $routine->send($this->callbackData);
@@ -100,11 +108,10 @@ class CoroutineTask{
      */
     public function callback($data)
     {
-
         /*
             继续work的函数实现 ，栈结构得到保存
          */
-
+//        Log::write('callback:'.__METHOD__.print_r($data, true));
         $gen = $this->stack->pop();
         $this->callbackData = $data;
         $value = $gen->send($this->callbackData);
@@ -126,39 +133,30 @@ class CoroutineTask{
                 return;
             }
             $value = $routine->current();
-            Log::write(json_encode('coroutine:'.json_encode($value)));
             //嵌套的协程
             if ($value instanceof \Generator) {
-                Log::write('嵌套协程');
                 $this->stack->push($routine);
                 $routine = $value;
                 return;
             }
 
-            Log::write(json_encode('value:'.json_encode($value)));
             if ($value != null) {
 
                 if(method_exists($value, 'getResult')) {
                     $result = $value->getResult();
-                    Log::write('getResult:'.json_encode($result));
                 }else{
-                    Log::write('no getResult');
                     $result = $value;
                 }
                 if ($result !== CoroutineResult::getInstance()) {
-                    Log::write('已经获取到查询结果');
                     $routine->send($result);
                 }
                 //嵌套的协程返回
                 while (!$routine->valid() && !$this->stack->isEmpty()) {
-                    Log::write('valid');
                     $result = $routine->getReturn();
-                    Log::write('result:'.print_r($result, true));
                     $this->routine = $this->stack->pop();
                     $this->routine->send($result);
                 }
             } else {
-                Log::write('next');
                 $routine->next();
             }
         } catch (\Exception $e) {

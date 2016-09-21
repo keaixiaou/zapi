@@ -9,17 +9,12 @@
 namespace ZPHP\Pool;
 
 use ZPHP\Core\Log;
-use ZPHP\Model\Model;
 use ZPHP\Pool\Base\AsynPool;
 
 class MysqlAsynPool extends AsynPool{
 
     const AsynName = 'mysql';
 
-    /**
-     * @var Model
-     */
-    public $dbQueryBuilder;
     /**
      * @var array
      */
@@ -39,7 +34,6 @@ class MysqlAsynPool extends AsynPool{
     public function initWorker($workId)
     {
         parent::initWorker($workId);
-        $this->dbQueryBuilder = new Model($this);
     }
 
     /**
@@ -48,11 +42,8 @@ class MysqlAsynPool extends AsynPool{
      * @param $bind_id 绑定的连接id，用于事务
      * @param $sql
      */
-    public function query(callable $callback, $bind_id = null, $sql = null)
+    public function query(callable $callback,  $sql = null)
     {
-//        if ($sql == null) {
-//            $sql = $this->dbQueryBuilder->makeSql(false);
-//        }
 
         if (empty($sql)) {
             throw new \Exception('sql empty');
@@ -62,8 +53,6 @@ class MysqlAsynPool extends AsynPool{
         ];
         $data['token'] = $this->addTokenCallback($callback);
         call_user_func([$this, 'execute'], $data);
-        //写入管道
-//        $this->asyn_manager->writePipe($this, $data, $this->worker_id);
     }
 
     /**
@@ -72,46 +61,37 @@ class MysqlAsynPool extends AsynPool{
      */
     public function execute($data)
     {
-        $client = null;
-//        $bind_id = $data['bind_id']?null:$data['bind_id'];
-//        if ($bind_id != null) {//绑定
-//            $client = $this->bind_pool[$bind_id]['client'];
-//        }
-        if ($client == null) {
-            if (count($this->pool) == 0) {//代表目前没有可用的连接
-                $this->prepareOne();
-                $this->commands->push($data);
-                return;
-            } else {
-                $client = $this->pool->shift();
-            }
+        if ($this->pool->isEmpty()) {//代表目前没有可用的连接
+            $this->prepareOne();
+            $this->commands->enqueue($data);
+            return;
+        } else {
+            $client = $this->pool->dequeue();
         }
-//        else {
-//            if ($client->isAffair) {//如果已经在处理事务了就放进去
-//                $this->bind_pool[$bind_id]['affairs'][] = $data;
-//                return;
-//            }
-//        }
 
         $sql = $data['sql'];
         $client->query($sql, function ($client, $result) use ($data) {
             if ($result === false) {
                 if ($client->errno == 2006 || $client->errno == 2013) {//断线重连
                     $this->reconnect($client);
+                    unset($client);
                     $this->commands->unshift($data);
                 } else {
                     throw new \Exception("[mysql]:" . $client->error . "[sql]:" . $data['sql']);
                 }
+            }else {
+                $data['result']['client_id'] = $client->client_id;
+                $data['result']['result'] = $result;
+                $data['result']['affected_rows'] = $client->affected_rows;
+                $data['result']['insert_id'] = $client->insert_id;
+                unset($data['sql']);
+                //不是绑定的连接就回归连接
+                $this->pushToPool($client);
+
+                //给worker发消息
+                call_user_func([$this, 'distribute'], $data);
+
             }
-            $data['result']['client_id'] = $client->client_id;
-            $data['result']['result'] = $result;
-            $data['result']['affected_rows'] = $client->affected_rows;
-            $data['result']['insert_id'] = $client->insert_id;
-            unset($data['sql']);
-            //给worker发消息
-            call_user_func([$this, 'distribute'], $data);
-            //不是绑定的连接就回归连接
-            $this->pushToPool($client);
         });
     }
 
@@ -127,14 +107,16 @@ class MysqlAsynPool extends AsynPool{
             $client = $tmpClient;
         }
         $set = $this->config;
+        $nowConnectNo = $this->mysql_max_count;
         unset($set['asyn_max_count']);
-        $client->connect($set, function ($client, $result) use($tmpClient) {
+        $client->connect($set, function ($client, $result) use($tmpClient,$nowConnectNo) {
             if (!$result) {
                // $this->mysql_max_count --;
                 throw new \Exception($client->connect_error);
             } else {
                 $client->isAffair = false;
-                $client->client_id = $this->mysql_max_count;
+                $client->client_id = $tmpClient?$tmpClient->client_id:$nowConnectNo;
+//                Log::write(__METHOD__.print_r($client, true));
                 $this->pushToPool($client);
             }
         });

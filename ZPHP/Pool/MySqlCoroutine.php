@@ -22,11 +22,10 @@ class MySqlCoroutine implements ICoroutineBase{
     public $sql;
     public $result;
 
-    public function __construct($mysqlAsynPool, $_bind_id = null, $_sql = null)
+    public function __construct($mysqlAsynPool, $_sql = null)
     {
         $this->result = CoroutineResult::getInstance();
         $this->_mysqlAsynPool = $mysqlAsynPool;
-        $this->bind_id = $_bind_id;
         $this->sql = $_sql;
 //        $this->send(function ($result) {
 //            $this->result = $result;
@@ -45,7 +44,7 @@ class MySqlCoroutine implements ICoroutineBase{
      */
     public function send(callable $callback)
     {
-        $this->_mysqlAsynPool->query($callback, $this->bind_id, $this->sql);
+        $this->_mysqlAsynPool->query($callback, $this->sql);
     }
 
     public function getResult()

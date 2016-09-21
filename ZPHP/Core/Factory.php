@@ -40,7 +40,8 @@ class Factory
         if(!is_file($controller_file)){
             throw new \Exception("no file {$controller_file}");
         }
-        runkit_import($controller_file, RUNKIT_IMPORT_CLASS_METHODS|RUNKIT_IMPORT_OVERRIDE);
+//        runkit_import($controller_file, RUNKIT_IMPORT_CLASS_METHODS|RUNKIT_IMPORT_OVERRIDE);
+
         if (!\class_exists($className)) {
             throw new \Exception("no class {$className}");
         }

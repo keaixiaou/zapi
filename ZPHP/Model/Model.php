@@ -55,6 +55,7 @@ class Model {
     //执行查询部分
     public function query($sql){
         $_sql = trim($sql);
+//        return new MySqlCoroutine($this->mysqlPool, null, $_sql);
         $mysqlCoroutine =  new MySqlCoroutine($this->mysqlPool, null, $_sql);
         yield $mysqlCoroutine->query($_sql);
     }
