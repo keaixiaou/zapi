@@ -118,9 +118,7 @@ class ZPHP
 
     final public static function exceptionHandler(\Exception $exception)
     {
-//        echo $exception->getMessage();
-        echo Swoole::info($exception->getMessage());
-//        return Response::display(Formater::exception($exception));
+        return Response::display(Formater::exception($exception));
     }
 
     final public static function fatalHandler()
