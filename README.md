@@ -17,6 +17,16 @@
 		如果是静态文件，可以直接用nginx代理
 		如果是动态请求，最好使用nginx做代理转发
 		
+###目录结构
+![目录结构](https://raw.githubusercontent.com/keaixiaou/pic/master/test1.jpg)
+
+
+####apps -  mvc框架的controllers和service
+####		^	service 通常的调用服务层
+####config - 配置文件
+####library - 对应的全局函数,每个work进程启动的时候会加载这个方法
+
+		
 
 ###路由
 根据pathinfo访问对应得controller，如ip:port/home/index/index则会访问home目录下的IndexController的index方法；如果不指定pathinfo则访问home目录下的IndexController的index方法
@@ -84,15 +94,6 @@ $data = Db::collection('stu_quest_score')->findOne(['iStuId'=>26753]);
 
 ##ab测试-本机查询mysql，一个work进程，4个链接mysql连接池
 ![本机查询mysql](https://raw.githubusercontent.com/keaixiaou/base/master/swoole3.jpeg)
-
-###目录结构
-![目录结构](https://raw.githubusercontent.com/keaixiaou/pic/master/test1.jpg)
-
-
-####apps -  mvc框架的controllers和service
-####		^	service 通常的调用服务层
-####config - 配置文件
-####library - 对应的全局函数,每个work进程启动的时候会加载这个方法
 
 
 
