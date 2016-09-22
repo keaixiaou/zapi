@@ -118,7 +118,7 @@ class ZPHP
 
     final public static function exceptionHandler(\Exception $exception)
     {
-        return Response::display(Formater::exception($exception));
+        echo $exception->getMessage()."\n".$exception->getFile()."\n".$exception->getLine();
     }
 
     final public static function fatalHandler()
@@ -236,7 +236,6 @@ class ZPHP
             $serverMode = Config::get('server_mode', 'Http');
             //寻找server的socket适配器
             $service = Server\Factory::getInstance($serverMode);
-
             if ($run) {
                 echo ( "Service startting success!\n");
                 $service->run();
