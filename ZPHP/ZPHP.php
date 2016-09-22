@@ -118,7 +118,32 @@ class ZPHP
 
     final public static function exceptionHandler(\Exception $exception)
     {
-        echo $exception->getMessage()."\n".$exception->getFile()."\n".$exception->getLine();
+
+        $trace = $exception->getTrace();
+        $info = str_repeat('-', 100) . "\n";
+        $info .= "# line:{$exception->getLine()} call:{$exception->getCode()} error message:{$exception->getMessage()}\tfile:{$exception->getFile()}\n";
+        foreach ($trace as $k => $t)
+        {
+            if (empty($t['line']))
+            {
+                $t['line'] = 0;
+            }
+            if (empty($t['class']))
+            {
+                $t['class'] = '';
+            }
+            if (empty($t['type']))
+            {
+                $t['type'] = '';
+            }
+            if (empty($t['file']))
+            {
+                $t['file'] = 'unknow';
+            }
+            $info .= "#$k line:{$t['line']} call:{$t['class']}{$t['type']}{$t['function']}\tfile:{$t['file']}\n";
+        }
+        $info .= str_repeat('-', 100) . "\n";
+        exit( $info);
     }
 
     final public static function fatalHandler()
@@ -206,12 +231,11 @@ class ZPHP
 
     //执行命令
     protected static function doCommand($argv ,$run){
-
         if ($argv == 'start') {
             self::start($run);
         }else if ($argv=='stop'){
             self::stop();
-            exit( 'Service stop success!');
+            exit( "Service stop success!\n");
         }else if ($argv =='restart'){
             self::stop();
             echo "Service stop success!\nService is starting...\n";
