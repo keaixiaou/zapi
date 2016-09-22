@@ -115,9 +115,9 @@ class ZPHP
         }
     }
 
-    final public static function exceptionHandler($exception)
+    final public static function exceptionHandler(\Exception $exception)
     {
-        echo Response::display(Formater::exception($exception));
+        echo $exception->getMessage();
 //        return Response::display(Formater::exception($exception));
     }
 
