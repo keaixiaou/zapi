@@ -25,15 +25,17 @@ class Index extends Controller{
     public function index(){
         $data = yield Db::redis()->cache('abcd');
         $res['cache'] = $data;
-//        $httpClient = new HttpClientCoroutine();
+        $user2 = yield table('admin_user')->where(['id'=>2])->find();
+        $res['user2'] = $user2;
+        $res['last_sql'] = Db::getLastSql();
+        return $res;
+
+
+        //        $httpClient = new HttpClientCoroutine();
 //        $data = yield $httpClient->request('http://speak.test.com/');
 //        $service = new TestService();
 //        $sql =  $service->test();
 //        $user1 = yield Db::table()->query($sql);
-        $user2 = yield table('')->query('select *from admin_user where id =2');
-
-        $res['user2'] = $user2;
-        return $res;
 //
 //        $res['body'] =$data;
 //        return $res;

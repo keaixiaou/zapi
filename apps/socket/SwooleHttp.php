@@ -68,8 +68,7 @@ class SwooleHttp extends ZSwooleHttp
                     $task = new CoroutineTask($generator);
                     $task->work($task->getRoutine());
                     unset($task);
-                    Log::write('after request');
-//                    $this->coroutine->start($generator);
+                    Log::write('after request', Log::INFO);
                 }
                 unset($controller);
             }catch(\Exception $e){

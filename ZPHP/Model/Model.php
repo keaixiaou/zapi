@@ -11,9 +11,8 @@ namespace ZPHP\Model;
 
 
 
+use ZPHP\Core\Db;
 use ZPHP\Core\Log;
-use ZPHP\Db\Db;
-use ZPHP\Pool\Base\CoroutineResult;
 use ZPHP\Pool\Base\MysqlAsynPool;
 use ZPHP\Pool\MySqlCoroutine;
 
@@ -43,9 +42,6 @@ class Model {
     // 数据库表达式
     protected $exp = array('eq'=>'=','neq'=>'<>','gt'=>'>','egt'=>'>=','lt'=>'<','elt'=>'<=','notlike'=>'NOT LIKE','like'=>'LIKE','in'=>'IN','notin'=>'NOT IN','not in'=>'NOT IN','between'=>'BETWEEN','not between'=>'NOT BETWEEN','notbetween'=>'NOT BETWEEN');
 
-//    function __construct(Db $Db, $db_key = 'master'){
-//        $this->db = $Db->getDb($db_key);
-//    }
 
     function __construct($mysqlPool){
         $this->mysqlPool = $mysqlPool;
@@ -55,7 +51,7 @@ class Model {
     //执行查询部分
     public function query($sql){
         $_sql = trim($sql);
-//        return new MySqlCoroutine($this->mysqlPool, null, $_sql);
+        Db::setSql($_sql);
         $mysqlCoroutine =  new MySqlCoroutine($this->mysqlPool);
         yield $mysqlCoroutine->query($_sql);
     }
@@ -240,8 +236,22 @@ class Model {
                 $this->limit,
                 $this->for_update,
             ));
-
+        $this->reset();
 //        Log::write('sql:'.$sql);
         return $sql;
+    }
+
+
+    protected function reset(){
+        $this->select = '*';
+        $this->join = '';
+        $this->use_index = '';
+        $this->where = '';
+        $this->union = '';
+        $this->group = '';
+        $this->having = '';
+        $this->order = '';
+        $this->limit = '';
+        $this->for_update = '';
     }
 }
