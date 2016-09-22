@@ -5,6 +5,7 @@
  * 初始化框架相关信息
  */
 namespace ZPHP;
+use ZPHP\Core\Swoole;
 use ZPHP\Platform\Linux;
 use ZPHP\Platform\Windows;
 use ZPHP\Protocol\Response;
@@ -117,7 +118,8 @@ class ZPHP
 
     final public static function exceptionHandler(\Exception $exception)
     {
-        echo $exception->getMessage();
+//        echo $exception->getMessage();
+        echo Swoole::info($exception->getMessage());
 //        return Response::display(Formater::exception($exception));
     }
 
