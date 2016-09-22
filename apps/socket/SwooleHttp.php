@@ -19,7 +19,6 @@ class SwooleHttp extends ZSwooleHttp
     /**
      * @var Coroutine
      */
-    protected $coroutine;
     public function onRequest($request, $response)
     {
         ob_start();
@@ -112,13 +111,16 @@ class SwooleHttp extends ZSwooleHttp
             require ROOTPATH.$common;
         }
         if (!$server->taskworker) {//worker进程启动协程调度器
-//            $this->coroutine = new Coroutine();
             Db::getInstance()->initMysqlPool($workerId);
+            Db::getInstance()->initRedisPool($workerId);
         }
-
-
     }
 
+
+    /**
+     * @param $server
+     * @param $workerId
+     */
     public function onWorkerStop($server, $workerId){
         if(!$server->taskworker) {
             Db::$instance->freeMysqlPool();

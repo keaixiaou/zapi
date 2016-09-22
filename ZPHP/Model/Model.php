@@ -56,7 +56,7 @@ class Model {
     public function query($sql){
         $_sql = trim($sql);
 //        return new MySqlCoroutine($this->mysqlPool, null, $_sql);
-        $mysqlCoroutine =  new MySqlCoroutine($this->mysqlPool, null, $_sql);
+        $mysqlCoroutine =  new MySqlCoroutine($this->mysqlPool);
         yield $mysqlCoroutine->query($_sql);
     }
 

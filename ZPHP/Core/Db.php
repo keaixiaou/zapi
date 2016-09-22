@@ -9,9 +9,11 @@
 
 namespace ZPHP\Core;
 
+use ZPHP\Coroutine\Redis\RedisAsynPool;
 use ZPHP\Db\Mongo;
 use ZPHP\Model\Model;
 use ZPHP\Pool\MysqlAsynPool;
+use ZPHP\Redis\Redis;
 
 class Db {
     /**
@@ -19,9 +21,15 @@ class Db {
      */
     public $mysqlPool;
 
+    /**
+     * @var RedisAsynPool
+     */
+    public $redisPool;
+
     public static $instance;
     protected static $db;
     protected static $_tables;
+    protected static $_redis;
     protected static $_collection;
     private static $lastSql;
 
@@ -71,7 +79,31 @@ class Db {
         return self::$_tables[$tableName];
     }
 
+    /**
+     * @param $workId
+     */
+    public static function initRedisPool($workId){
+        if(empty(self::$instance->redisPool)){
+            self::$instance->redisPool = new RedisAsynPool();
+            self::$instance->redisPool->initWorker($workId);
+        }
+    }
 
+    /**
+     * @return Redis
+     */
+    public static function redis(){
+        if(!isset(self::$_redis)){
+            self::$_redis = new Redis(self::$instance->redisPool);
+        }
+        return self::$_redis;
+    }
+
+    /**
+     * @param string $collectName
+     * @return mixed
+     * @throws \Exception
+     */
     public static function collection($collectName = ''){
         if(!isset(self::$_collection[$collectName])){
             $config = Config::get('mongo');

@@ -8,6 +8,7 @@
 
 namespace ZPHP\Pool;
 
+use ZPHP\Core\Config;
 use ZPHP\Core\Log;
 use ZPHP\Pool\Base\AsynPool;
 
@@ -24,7 +25,6 @@ class MysqlAsynPool extends AsynPool{
     public function __construct()
     {
         parent::__construct();
-        $this->bind_pool = [];
     }
 
     /**
@@ -34,6 +34,7 @@ class MysqlAsynPool extends AsynPool{
     public function initWorker($workId)
     {
         parent::initWorker($workId);
+        $this->config = Config::getField('database','master');
     }
 
     /**

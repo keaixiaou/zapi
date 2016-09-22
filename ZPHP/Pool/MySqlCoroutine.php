@@ -22,11 +22,10 @@ class MySqlCoroutine implements ICoroutineBase{
     public $sql;
     public $result;
 
-    public function __construct($mysqlAsynPool, $_sql = null)
+    public function __construct($mysqlAsynPool)
     {
         $this->result = CoroutineResult::getInstance();
         $this->_mysqlAsynPool = $mysqlAsynPool;
-        $this->sql = $_sql;
 //        $this->send(function ($result) {
 //            $this->result = $result;
 //        });
