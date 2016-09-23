@@ -31,8 +31,8 @@ class Index extends Controller{
         return $res;
 
 
-        //        $httpClient = new HttpClientCoroutine();
-//        $data = yield $httpClient->request('http://speak.test.com/');
+        $httpClient = new HttpClientCoroutine();
+        $data = yield $httpClient->request('http://speak.test.com/');
 //        $service = new TestService();
 //        $sql =  $service->test();
 //        $user1 = yield Db::table()->query($sql);
