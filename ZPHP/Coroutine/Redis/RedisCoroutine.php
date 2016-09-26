@@ -10,8 +10,8 @@ namespace ZPHP\Coroutine\Redis;
 
 
 
-use ZPHP\Pool\Base\CoroutineResult;
-use ZPHP\Pool\Base\ICoroutineBase;
+use ZPHP\Coroutine\Base\CoroutineResult;
+use ZPHP\Coroutine\Base\ICoroutineBase;
 
 class RedisCoroutine implements ICoroutineBase
 {

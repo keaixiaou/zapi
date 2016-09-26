@@ -6,7 +6,7 @@
  * Time: 下午2:34
  */
 
-namespace ZPHP\Pool\Base;
+namespace ZPHP\Coroutine\Base;
 
 
 class CoroutineResult

@@ -5,18 +5,18 @@
 	1.框架最新加入协程+mysql连接池，非阻塞的mysql查询大大提高了框架应对请求的吞吐量
 	2.php版本需要7.0+
 	3.swoole版本1.8.*
-	
+
 ##运行demo
 
 	本框架只支持http模式：
 	运行：
-	cd webroot;
-	php main.php start|stop|restart|reload
+	cd 到根目录
+	php webroot/main.php start|stop|restart|reload
 	访问IP:PORT
 	建议：
 		如果是静态文件，可以直接用nginx代理
 		如果是动态请求，最好使用nginx做代理转发
-		
+
 ###目录结构
 ![目录结构](https://raw.githubusercontent.com/keaixiaou/pic/master/test1.jpg)
 
@@ -26,7 +26,7 @@
 ####config - 配置文件
 ####library - 对应的全局函数,每个work进程启动的时候会加载这个方法
 
-		
+​		
 
 ###路由
 根据pathinfo访问对应得controller，如ip:port/home/index/index则会访问home目录下的IndexController的index方法；如果不指定pathinfo则访问home目录下的IndexController的index方法
@@ -64,9 +64,9 @@ $data = yield Db::redis()->cache('abcd');
 在config下配置mysql的配置文件，即可在业务中使用,你可以使用以下方法查询数据
 
 ```
- 		$data = Db::table()->query('select* from admin_user');
-        $a = DB::table()->query('select*from admin_user where id =1');
-        $userinfo = table('admin_user')->where(['id'=>1])->find();
+ 		$data = yield Db::table()->query('select* from admin_user');
+        $a = yield DB::table()->query('select*from admin_user where id =1');
+        $userinfo = yield table('admin_user')->where(['id'=>1])->find();
 ```
 
 
@@ -85,7 +85,6 @@ $data = yield $httpClient->request('http://speak.test.com/');
 
 ```
 $data = Db::collection('stu_quest_score')->findOne(['iStuId'=>26753]);
-
 ```
 
 

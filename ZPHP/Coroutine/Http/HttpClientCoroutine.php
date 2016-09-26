@@ -10,7 +10,7 @@
 namespace ZPHP\Coroutine\Http;
 
 
-use ZPHP\Pool\Base\ICoroutineBase;
+use ZPHP\Coroutine\Base\ICoroutineBase;
 
 class HttpClientCoroutine implements ICoroutineBase{
     /**

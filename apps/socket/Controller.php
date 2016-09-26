@@ -8,6 +8,7 @@
 
 namespace socket;
 use ZPHP\Core\Log;
+use ZPHP\Core\Swoole;
 
 class Controller {
     /**
@@ -25,7 +26,7 @@ class Controller {
     public function coroutineApiStart(){
         $result = yield call_user_func([$this, $this->method]);
         $result = json_encode($result);
-        Log::write('result:'.($result),Log::INFO);
+        Log::write('result:' . ($result), Log::INFO);
         $this->response->end($result);
         $this->destroy();
     }
@@ -35,7 +36,7 @@ class Controller {
      */
     public function onExceptionHandle(\Exception $e){
         $msg = DEBUG===true?$e->getMessage():'服务器升空了!';
-        $this->response->end(Swoole::info($msg));
+        $this->response->end(json_encode(['code'=>500,'msg'=>$msg]));
         $this->destroy();
     }
 

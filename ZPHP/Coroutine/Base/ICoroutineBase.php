@@ -6,7 +6,7 @@
  * Time: 下午2:36
  */
 
-namespace ZPHP\Pool\Base;
+namespace ZPHP\Coroutine\Base;
 interface ICoroutineBase
 {
     function send(callable $callback);

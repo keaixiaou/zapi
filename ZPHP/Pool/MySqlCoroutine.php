@@ -10,8 +10,8 @@
 namespace ZPHP\Pool;
 
 use ZPHP\Core\Log;
-use ZPHP\Pool\Base\CoroutineResult;
-use ZPHP\Pool\Base\ICoroutineBase;
+use ZPHP\Coroutine\Base\CoroutineResult;
+use ZPHP\Coroutine\Base\ICoroutineBase;
 
 class MySqlCoroutine implements ICoroutineBase{
     /**

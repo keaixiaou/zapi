@@ -23,16 +23,22 @@ use ZPHP\Model\Model;
 
 class Index extends Controller{
     public function index(){
+
         $data = yield Db::redis()->cache('abcd');
         $res['cache'] = $data;
-        $user2 = yield table('admin_user')->where(['id'=>2])->find();
-        $res['user2'] = $user2;
-        $res['last_sql'] = Db::getLastSql();
-        return $res;
-
-
+        $user = yield table('admin_user')->where(['id' => 2])->find();
+        $res['user'] = $user;
         $httpClient = new HttpClientCoroutine();
         $data = yield $httpClient->request('http://speak.test.com/');
+        $res['http'] = $data;
+        return $res;
+
+//        $res['last_sql'] = Db::getLastSql();
+//        return $res;
+
+
+//        $httpClient = new HttpClientCoroutine();
+//        $data = yield $httpClient->request('http://speak.test.com/');
 //        $service = new TestService();
 //        $sql =  $service->test();
 //        $user1 = yield Db::table()->query($sql);

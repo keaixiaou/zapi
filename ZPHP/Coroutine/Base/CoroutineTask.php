@@ -7,10 +7,9 @@
  */
 
 
-namespace ZPHP\Pool\Base;
+namespace ZPHP\Coroutine\Base;
 
 use ZPHP\Core\Log;
-use ZPHP\Pool\MySqlCoroutine;
 
 class CoroutineTask{
     protected $callbackData;
@@ -18,16 +17,24 @@ class CoroutineTask{
     protected $callData;
     protected $routine;
     protected $exception = null;
+    protected $i;
 
     public function __construct(\Generator $routine)
     {
         $this->routine = $routine;
         $this->stack = new \SplStack();
+        $this->i = 1;
     }
 
 
+    /**
+     * 协程调度器
+     * @param \Generator $routine
+     */
     public function work(\Generator $routine){
         while (true) {
+//            Log::write("this'i : ".$this->i);
+            $this->i++;
             try {
                 if (!$routine) {
                     return;
@@ -44,7 +51,7 @@ class CoroutineTask{
 
 
                 //异步IO的父类
-                if(is_subclass_of($value, 'ZPHP\Pool\Base\ICoroutineBase')){
+                if(is_subclass_of($value, 'ZPHP\Coroutine\Base\ICoroutineBase')){
                     $this->stack->push($routine);
                     $value->send([$this, 'callback']);
                     return;
@@ -76,25 +83,17 @@ class CoroutineTask{
                         }
                     }
                 }else{
+                    Log::write(__METHOD__.';last value:'.print_r($value, true));
                     $this->routine->send($value);
                 }
 
             } catch (\Exception $e) {
-                while (!$this->stack->isEmpty()) {
+                while(!$this->stack->isEmpty()) {
                     $routine = $this->stack->pop();
-                    try {
-                        $routine->throw($e);
-                        break;
-                    } catch (\Exception $e) {
-
-                    }
+//                    Log::write('routine:' . print_r($routine, true));
                 }
-                if ($routine->controller != null) {
-                    call_user_func([$routine->controller, 'onExceptionHandle'], $e);
-                    $routine->controller = null;
-                } else {
-                    $routine->throw($e);
-                }
+                call_user_func_array([$this->routine->controller, 'onExceptionHandle'], ['e'=>$e]);
+                break;
             }
         }
     }
@@ -119,64 +118,6 @@ class CoroutineTask{
 
     }
 
-
-    /**
-     * [run 协程调度]
-     * @return [type]         [description]
-     */
-    public function run()
-    {
-        $routine = &$this->routine;
-
-        try {
-            if (!$routine) {
-                return;
-            }
-            $value = $routine->current();
-            //嵌套的协程
-            if ($value instanceof \Generator) {
-                $this->stack->push($routine);
-                $routine = $value;
-                return;
-            }
-
-            if ($value != null) {
-
-                if(method_exists($value, 'getResult')) {
-                    $result = $value->getResult();
-                }else{
-                    $result = $value;
-                }
-                if ($result !== CoroutineResult::getInstance()) {
-                    $routine->send($result);
-                }
-                //嵌套的协程返回
-                while (!$routine->valid() && !$this->stack->isEmpty()) {
-                    $result = $routine->getReturn();
-                    $this->routine = $this->stack->pop();
-                    $this->routine->send($result);
-                }
-            } else {
-                $routine->next();
-            }
-        } catch (\Exception $e) {
-            while (!$this->stack->isEmpty()) {
-                $this->routine = $this->stack->pop();
-                try {
-                    $this->routine->throw($e);
-                    break;
-                } catch (\Exception $e) {
-
-                }
-            }
-            if ($routine->controller != null) {
-                call_user_func([$routine->controller, 'onExceptionHandle'], $e);
-                $routine->controller = null;
-            } else {
-                $routine->throw($e);
-            }
-        }
-    }
 
     /**
      * [isFinished 判断该task是否完成]

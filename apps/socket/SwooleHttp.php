@@ -7,8 +7,7 @@ use ZPHP\Core\Factory;
 use ZPHP\Core\Config;
 use ZPHP\Core\Log;
 use ZPHP\Core\Swoole;
-use ZPHP\Pool\Base\Coroutine;
-use ZPHP\Pool\Base\CoroutineTask;
+use ZPHP\Coroutine\Base\CoroutineTask;
 use ZPHP\Protocol\Response;
 use ZPHP\Socket\Callback\SwooleHttp as ZSwooleHttp;
 use ZPHP\Socket\IClient;
@@ -65,6 +64,7 @@ class SwooleHttp extends ZSwooleHttp
             try{
                 $generator = call_user_func([$controller, $action]);
                 if ($generator instanceof \Generator) {
+                    $generator->controller = $controller;
                     $task = new CoroutineTask($generator);
                     $task->work($task->getRoutine());
                     unset($task);
