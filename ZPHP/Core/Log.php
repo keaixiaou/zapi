@@ -35,7 +35,7 @@ abstract class Log {
         $timeArray = explode(' ', microtime());
         $message = date('Y-m-d H:i:s').substr($timeArray[0],1)." {$level_str}-".$msg."\n";
         self::$log[] = $message;
-        if(DEBUG!==true && count(self::$log)<10)return;
+        if(DEBUG!==true && count(self::$log)<100)return;
         $str = implode("", self::$log);
         $file_path = ZPHP::getRootPath().'/log/app';
         if(!is_dir($file_path)){
