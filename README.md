@@ -1,7 +1,11 @@
 
 # zhttp-根据zphp改造专门用来做http服务的轻量级框架
 (当前只用来做app接口用)
+
+### 有任何框架相关的问题可以咨询我：286252682,也可以进群（138897359）咨询
+
 ## 注意事项
+
 	1.框架最新加入协程+mysql连接池，非阻塞的mysql查询大大提高了框架应对请求的吞吐量
 	2.php版本需要7.0+
 	3.swoole版本1.8.*
@@ -105,7 +109,11 @@ $data = Db::collection('stu_quest_score')->findOne(['iStuId'=>26753]);
 ```
 
 
+
+
+
 ##ab测试-本机裸跑输出
+
 ![本机裸跑输出](https://raw.githubusercontent.com/keaixiaou/pic/master/test2.jpg)
 
 ##ab测试-本机(mac air)查询mysql，一个work进程，4个链接mysql连接池
