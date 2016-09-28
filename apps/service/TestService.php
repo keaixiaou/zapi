@@ -10,6 +10,9 @@ namespace service;
 
 class TestService{
     public function test(){
-        return 'select * from admin_user where id=1';
+        $sql = 'select * from admin_user where id=1';
+        $data['sql'] = $sql;
+        $data['info'] = yield table('admin_user')->where(['id'=>1])->find();
+        return $data;
     }
 }
