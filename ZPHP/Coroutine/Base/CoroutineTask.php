@@ -36,6 +36,9 @@ class CoroutineTask{
 //            Log::write("this'i : ".$this->i);
             $this->i++;
             try {
+                if(!empty($this->exception)){
+                    throw new \Exception($this->exception);
+                }
                 if (!$routine) {
                     return;
                 }
