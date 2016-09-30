@@ -127,9 +127,9 @@ class RedisAsynPool extends AsynPool
      */
     public function initRedis($client, $now, $nowConnectNo){
 
-        if(!empty($operator[$now]['next'])){
+        if(!empty($this->operator[$now]['next'])){
             if(!empty($this->config[$now])){
-                $operat = $this->operator[$now]['op'];
+            $operat = $this->operator[$now]['op'];
                 $client->$operat($this->config[$now], function ($client, $result)use($now, $nowConnectNo) {
                     if (!$result) {
                         $errMsg = $client->errMsg;
@@ -140,7 +140,7 @@ class RedisAsynPool extends AsynPool
                     call_user_func([$this, 'initRedis'], $client, $this->operator[$now]['next'], $nowConnectNo);
                 });
             }else{
-                $this->initRedis($client, $operator[$now]['next'],$nowConnectNo);
+                $this->initRedis($client, $this->operator[$now]['next'],$nowConnectNo);
             }
         }else{
 //            $client->client_id = $nowConnectNo;
