@@ -35,27 +35,36 @@ class Client
     public function getHttpClient()
     {
 
-        $parseUrl = parse_url($this->data['url']);
-        if(empty($parseUrl['host'])){
-            throw new \Exception("输入地址有误");
-        }
-        $this->data['host'] = $parseUrl['host'];
-        $this->data['ssl'] = $parseUrl['scheme']=='https'?true:false;
-        if($this->data['ssl']==true){
-            $this->data['port'] = 443;
-        }else {
-            $this->data['port'] = empty($parseUrl['port']) ? 80 : $parseUrl['port'];
-        }
-        $this->data['path'] = $parseUrl['path'];
-
-        $data = $this->data;
-        swoole_async_dns_lookup($this->data['host'], function ($host, $ip) use (&$data) {
-            if(empty($ip)){
-                throw new \Exception("找不到该域名");
+        try {
+            $parseUrl = parse_url($this->data['url']);
+            if (empty($parseUrl['host'])) {
+                throw new \Exception("输入地址有误");
             }
-            $client = new \swoole_http_client($ip, $data['port'], $data['ssl']);
-            $this->myCurl($client);
-        });
+            $this->data['host'] = $parseUrl['host'];
+            $this->data['ssl'] = $parseUrl['scheme'] == 'https' ? true : false;
+            if ($this->data['ssl'] == true) {
+                $this->data['port'] = 443;
+            } else {
+                $this->data['port'] = empty($parseUrl['port']) ? 80 : $parseUrl['port'];
+            }
+            $this->data['path'] = $parseUrl['path'];
+
+            $data = $this->data;
+            swoole_async_dns_lookup($this->data['host'], function ($host, $ip) use (&$data) {
+                try{
+                    if (empty($ip)) {
+                        throw new \Exception("找不到该域名");
+                    }
+                    $client = new \swoole_http_client($ip, $data['port'], $data['ssl']);
+                    $this->myCurl($client);
+                }catch(\Exception $e){
+                    call_user_func_array($this->data['callback'], ['data'=>['exception'=>$e->getMessage()]]);
+                }
+
+            });
+        }catch(\Exception $e){
+            call_user_func_array($this->data['callback'], ['data'=>['exception'=>$e->getMessage()]]);
+        }
     }
 
 

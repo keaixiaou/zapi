@@ -88,6 +88,7 @@ class CoroutineTask{
                 }
 
             } catch (\Exception $e) {
+//                Log::write('exception:' . print_r($e, true));
                 while(!$this->stack->isEmpty()) {
                     $routine = $this->stack->pop();
 //                    Log::write('routine:' . print_r($routine, true));
@@ -111,10 +112,16 @@ class CoroutineTask{
             继续work的函数实现 ，栈结构得到保存
          */
 //        Log::write('callback:'.__METHOD__.print_r($data, true));
-        $gen = $this->stack->pop();
-        $this->callbackData = $data;
-        $value = $gen->send($this->callbackData);
-        $this->work($gen);
+        if(!empty($data['exception'])){
+            call_user_func_array([$this->routine->controller, 'onSystemException'],
+                ['message'=>$data['exception']]);
+        }else {
+            $gen = $this->stack->pop();
+            $this->callbackData = $data;
+            $value = $gen->send($this->callbackData);
+            $this->work($gen);
+        }
+
 
     }
 

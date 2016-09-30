@@ -45,10 +45,6 @@ class MysqlAsynPool extends AsynPool{
      */
     public function query(callable $callback,  $sql = null)
     {
-
-        if (empty($sql)) {
-            throw new \Exception('sql empty');
-        }
         $data = [
             'sql' => $sql
         ];
@@ -63,7 +59,7 @@ class MysqlAsynPool extends AsynPool{
     public function execute($data)
     {
         if ($this->pool->isEmpty()) {//代表目前没有可用的连接
-            $this->prepareOne();
+            $this->prepareOne($data);
             $this->commands->enqueue($data);
             return;
         } else {
@@ -72,35 +68,41 @@ class MysqlAsynPool extends AsynPool{
 
         $sql = $data['sql'];
         $client->query($sql, function ($client, $result) use ($data) {
-            if ($result === false) {
-                if ($client->errno == 2006 || $client->errno == 2013) {//断线重连
-                    $this->reconnect($client);
-                    unset($client);
-                    $this->commands->unshift($data);
+            try {
+                if ($result === false) {
+                    if ($client->errno == 2006 || $client->errno == 2013) {//断线重连
+                        $this->reconnect($data, $client);
+                        unset($client);
+                        $this->commands->unshift($data);
+                    } else {
+                        throw new \Exception("[mysql客户端操作失败]:" . $client->error . "[sql]:" . $data['sql']);
+                    }
                 } else {
-                    throw new \Exception("[mysql]:" . $client->error . "[sql]:" . $data['sql']);
+                    $data['result']['client_id'] = $client->client_id;
+                    $data['result']['result'] = $result;
+                    $data['result']['affected_rows'] = $client->affected_rows;
+                    $data['result']['insert_id'] = $client->insert_id;
+                    unset($data['sql']);
+                    //不是绑定的连接就回归连接
+                    $this->pushToPool($client);
+
+                    //给worker发消息
+                    call_user_func([$this, 'distribute'], $data);
+
                 }
-            }else {
-                $data['result']['client_id'] = $client->client_id;
-                $data['result']['result'] = $result;
-                $data['result']['affected_rows'] = $client->affected_rows;
-                $data['result']['insert_id'] = $client->insert_id;
-                unset($data['sql']);
-                //不是绑定的连接就回归连接
-                $this->pushToPool($client);
-
-                //给worker发消息
+            }catch(\Exception $e){
+                $data['result']['exception'] = $e->getMessage();
                 call_user_func([$this, 'distribute'], $data);
-
             }
         });
     }
 
     /**
      * 重连或者连接
+     * @param array $data['token'] 异常回调的索引
      * @param null $client
      */
-    public function reconnect($tmpClient = null)
+    public function reconnect($data, $tmpClient = null)
     {
         if ($tmpClient == null) {
             $client = new \swoole_mysql();
@@ -110,15 +112,20 @@ class MysqlAsynPool extends AsynPool{
         $set = $this->config;
         $nowConnectNo = $this->mysql_max_count;
         unset($set['asyn_max_count']);
-        $client->connect($set, function ($client, $result) use($tmpClient,$nowConnectNo) {
-            if (!$result) {
-               // $this->mysql_max_count --;
-                throw new \Exception($client->connect_error);
-            } else {
-                $client->isAffair = false;
-                $client->client_id = $tmpClient?$tmpClient->client_id:$nowConnectNo;
+        $client->connect($set, function ($client, $result) use($tmpClient,$nowConnectNo, $data) {
+            try {
+                if (!$result) {
+                    // $this->mysql_max_count --;
+                    throw new \Exception("[mysql连接失败]".$client->connect_error);
+                } else {
+                    $client->isAffair = false;
+                    $client->client_id = $tmpClient ? $tmpClient->client_id : $nowConnectNo;
 //                Log::write(__METHOD__.print_r($client, true));
-                $this->pushToPool($client);
+                    $this->pushToPool($client);
+                }
+            }catch(\Exception $e){
+                $data['result']['exception'] = $e->getMessage();
+                call_user_func([$this, 'distribute'], $data);
             }
         });
     }
@@ -126,7 +133,7 @@ class MysqlAsynPool extends AsynPool{
     /**
      * 准备一个mysql
      */
-    public function prepareOne()
+    public function prepareOne($data)
     {
         if($this->prepareLock) return;
         if ($this->mysql_max_count >= $this->config['asyn_max_count']) {
@@ -135,7 +142,7 @@ class MysqlAsynPool extends AsynPool{
 
         $this->mysql_max_count ++;
         $this->prepareLock = true;
-        $this->reconnect();
+        $this->reconnect($data);
     }
 
     /**

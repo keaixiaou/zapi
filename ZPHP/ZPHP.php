@@ -118,7 +118,6 @@ class ZPHP
 
     final public static function exceptionHandler(\Exception $exception)
     {
-
         $trace = $exception->getTrace();
         $info = str_repeat('-', 100) . "\n";
         $info .= "# line:{$exception->getLine()} call:{$exception->getCode()} error message:{$exception->getMessage()}\tfile:{$exception->getFile()}\n";
@@ -143,21 +142,21 @@ class ZPHP
             $info .= "#$k line:{$t['line']} call:{$t['class']}{$t['type']}{$t['function']}\tfile:{$t['file']}\n";
         }
         $info .= str_repeat('-', 100) . "\n";
-        exit( $info);
+        echo $info;
+        return;
     }
 
     final public static function fatalHandler()
     {
         $error = \error_get_last();
-        Log::write('error:'.json_encode($error));
         if(empty($error)) {
             return;
         }
         if(!in_array($error['type'], array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR))) {
             return;
         }
-        Response::status('200');
         echo Formater::fatal($error);
+        return;
 //        return Response::display(Formater::fatal($error));
     }
 
@@ -198,8 +197,8 @@ class ZPHP
             self::setAppPath($appPath);
             $eh = Config::getField('project', 'exception_handler', __CLASS__ . '::exceptionHandler');
             \set_exception_handler($eh);
+            //致命错误
 //            \register_shutdown_function(Config::getField('project', 'fatal_handler', __CLASS__ . '::fatalHandler'));
-
             if (Config::getField('project', 'error_handler')) {
                 \set_error_handler(Config::getField('project', 'error_handler'));
             }

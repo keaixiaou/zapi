@@ -12,7 +12,7 @@ namespace ZPHP\Pool\Base;
 
 abstract class AsynPool implements IAsynPool
 {
-    const MAX_TOKEN = 650000;
+    const MAX_TOKEN = 10;
     protected $commands;
     protected $pool;
     protected $callBacks;

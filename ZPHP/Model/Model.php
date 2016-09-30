@@ -51,6 +51,9 @@ class Model {
     //执行查询部分
     public function query($sql){
         $_sql = trim($sql);
+        if(empty($_sql)){
+            throw new \Exception('sql 不能为空');
+        }
         Db::setSql($_sql);
         $mysqlCoroutine =  new MySqlCoroutine($this->mysqlPool);
         yield $mysqlCoroutine->query($_sql);

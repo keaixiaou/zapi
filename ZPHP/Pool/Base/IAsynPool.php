@@ -25,7 +25,7 @@ interface IAsynPool
 
     function pushToPool($client);
 
-    function prepareOne();
+    function prepareOne($data);
 
     function addTokenCallback($callback);
 }

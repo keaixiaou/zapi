@@ -40,6 +40,14 @@ class Controller {
         $this->destroy();
     }
 
+    /**
+     * 系统异常错误处理
+     * @param $message
+     */
+    public function onSystemException($message){
+        $this->response->end(json_encode(['code'=>500,'msg'=>'系统出现了异常:'.$message]));
+        $this->destroy();
+    }
 
     protected function destroy(){
         unset($this->response);
