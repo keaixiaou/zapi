@@ -28,27 +28,31 @@ class SwooleHttp extends ZSwooleHttp
                 throw new \Exception(403);
             }
             $url_array = explode('/', $uri);
-            if(!isset($url_array[2])){
-                if(!empty($url_array[0])){
-                    $mvc['controller'] = $url_array[0];
-                };
-                if(!empty($url_array[1])){
-                    $mvc['action'] = $url_array[1];
-                };
-            }else{
-                if(!empty($url_array[0])){
-                    $mvc['module'] = $url_array[0];
-                };
+            if(!isset($url_array[3])){
                 if(!empty($url_array[1])){
                     $mvc['controller'] = $url_array[1];
                 };
                 if(!empty($url_array[2])){
                     $mvc['action'] = $url_array[2];
                 };
+            }else{
+                if(!empty($url_array[1])){
+                    $mvc['module'] = $url_array[1];
+                };
+                if(!empty($url_array[2])){
+                    $mvc['controller'] = $url_array[2];
+                };
+                if(!empty($url_array[3])){
+                    $mvc['action'] = $url_array[3];
+                };
             }
             $controllerClass = Config::get('ctrl_path', 'controllers') . '\\'
                 .ucwords($mvc['module']).'\\'.ucwords($mvc['controller']);
+
             $FController = Factory::getInstance($controllerClass);
+            if(empty($FController)){
+                throw new \Exception(404);
+            }
 
             if(!empty(Config::getField('project','reload'))&& extension_loaded('runkit')){
                 $FController = Factory::reload($controllerClass);
