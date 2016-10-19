@@ -26,7 +26,6 @@ class Controller {
     public function coroutineApiStart(){
         $result = yield call_user_func([$this, $this->method]);
         $result = json_encode($result);
-        Log::write('result:' . ($result), Log::INFO);
         $this->response->end($result);
         $this->destroy();
     }

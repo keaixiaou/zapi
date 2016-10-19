@@ -25,21 +25,21 @@ class Index extends Controller{
     public function index(){
 
         //使用1-封装在service层,可以不写yield
-//        $testservice = new TestService();
-//        $data = $testservice->test();
-//        return $data;
+        $testservice = new TestService();
+        $data = $testservice->test();
+        return $data;
 
         //使用2-也可直接在controller层,但是调用底层需要写yield
-        yield Db::redis()->cache('abcd1',1111);
-        $data = yield Db::redis()->cache('abcd1');
-        $res['cache'] = $data;
+//        yield Db::redis()->cache('abcd1',1111);
+//        $data = yield Db::redis()->cache('abcd1');
+//        $res['cache'] = $data;
 //        $user = yield table('admin_user')->where(['id' => 2])->find();
 //        $res['user'] = $user;
 //        $httpClient = new HttpClientCoroutine();
 //        $data = yield $httpClient->request('http://speak.test.com/');
         //$postData 为空则表示是get请求,不为空为post请求
 //        $res['http'] = $data;
-        return $res;
+//        return $res;
 
 
 //        $res['last_sql'] = Db::getLastSql();
