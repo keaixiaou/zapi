@@ -44,6 +44,19 @@
 
 ​	根据pathinfo访问对应得controller，如ip:port/home/index/index则会访问home目录下的IndexController的index方法；如果不指定pathinfo则访问home目录下的IndexController的index方法
 
+##service
+```
+service层：
+		$sql = 'select * from admin_user where id=1';
+        $data['sql'] = $sql;
+        $data['info'] = yield table('admin_user')->where(['id'=>1])->find();
+        return $data;
+controller层:
+		//使用1-封装在service层,controller层可以不写yield
+        $testservice = new TestService();
+        $data = $testservice->test();
+        return $data;
+```
 
 
 ## 
