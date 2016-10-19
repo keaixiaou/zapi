@@ -36,7 +36,7 @@ return array(
         'httponly'=>true,
     ),
     'project'=>array(
-        'name'=>'zhttp',                 //项目名称。(会做为前缀，隔离不同的项目)
+        'name'=>'zapi',                 //项目名称。(会做为前缀，隔离不同的项目)
         'view_mode'=>'Stringv',   		//view模式
         'ctrl_name'=>'a',				//ctrl参数名
         'method_name'=>'m',				//method参数名    http://host/?{action_name}=main\main&{method_name}=main
