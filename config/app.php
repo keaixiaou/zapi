@@ -4,7 +4,7 @@ use \ZPHP\Socket\Adapter\Swoole;
 
 return array(
     'server_mode' => 'Socket',
-    'project_name' => 'zhttp',
+    'project_name' => 'zapi',
     'app_path' => 'apps',
     'ctrl_path' => 'controllers',
     'common_file'  => '/library/function.php',
