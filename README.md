@@ -28,7 +28,7 @@
 
 ###目录结构
 
-![目录结构](https://raw.githubusercontent.com/keaixiaou/pic/master/test1.jpg)
+![目录结构](https://raw.githubusercontent.com/keaixiaou/base/master/%E7%9B%AE%E5%BD%95.png)
 
 
 
@@ -114,8 +114,9 @@ $data = Db::collection('stu_quest_score')->findOne(['iStuId'=>26753]);
 
 ##ab测试-本机裸跑输出
 
-![本机裸跑输出](https://raw.githubusercontent.com/keaixiaou/pic/master/test2.jpg)
-
+![本机裸跑输出](https://raw.githubusercontent.com/keaixiaou/base/master/%E8%A3%B8%E8%B7%91%E6%B5%8B%E8%AF%95.png)
+##abredis测试，2个work
+![redis测试](https://raw.githubusercontent.com/keaixiaou/base/master/api%E6%B5%8B%E8%AF%95.png)
 ##ab测试-本机(mac air)查询mysql，一个work进程，4个链接mysql连接池
 ![本机查询mysql](https://raw.githubusercontent.com/keaixiaou/base/master/swoole3.jpeg)
 
