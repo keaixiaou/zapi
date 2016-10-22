@@ -9,10 +9,10 @@
 namespace controllers\Home;
 
 use service\TestService;
-use socket\Controller;
 use ZPHP\Cache\Factory;
 use ZPHP\Cache\ICache;
 use ZPHP\Controller\Apicontroller;
+use ZPHP\Controller\Controller;
 use ZPHP\Core\Config;
 use ZPHP\Core\Log;
 use ZPHP\Core\Db;
@@ -23,10 +23,10 @@ use ZPHP\Model\Model;
 
 class Index extends Controller{
     public function index(){
-
         //使用1-封装在service层,可以不写yield
         $testservice = new TestService();
         $data = $testservice->test();
+        $data['get'] = $this->get;
         return $data;
 
         //使用2-也可直接在controller层,但是调用底层需要写yield

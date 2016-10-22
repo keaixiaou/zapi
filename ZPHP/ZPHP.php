@@ -278,9 +278,9 @@ class ZPHP
         if(empty(self::$server_pid)){
             echo ("Service has shut down!\n");
         }else{
-            if(true===self::getOs()->kill(self::$server_pid, SIGTERM)){
+            self::getOs()->kill(self::$server_pid, SIGTERM);
+            if(is_file(self::$server_file))
                 unlink(self::$server_file);
-            };
         }
 
     }

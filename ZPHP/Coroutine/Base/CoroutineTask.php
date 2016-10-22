@@ -86,7 +86,7 @@ class CoroutineTask{
                         }
                     }
                 }else{
-                    Log::write(__METHOD__.';last value:'.print_r($value, true));
+//                    Log::write(__METHOD__.';last value:'.print_r($value, true));
                     $this->routine->send($value);
                 }
 

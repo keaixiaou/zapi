@@ -62,6 +62,14 @@ class SwooleHttp extends ZSwooleHttp
             if(!method_exists($controller, $action)){
                 throw new \Exception(404);
             }
+
+            //传入请求参数
+            $request_param_list = ['post','get','cookie','header','server','files'];
+            foreach($request_param_list as $param){
+                if(!empty($request->$param)){
+                    $controller->$param = $request->$param;
+                }
+            }
             $controller->method= $action;
             $controller->response = $response;
             $action = 'coroutineApiStart';

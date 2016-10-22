@@ -6,11 +6,21 @@
  * Time: 下午5:16
  */
 
-namespace socket;
+namespace ZPHP\Controller;
 use ZPHP\Core\Log;
 use ZPHP\Core\Swoole;
 
 class Controller {
+    /**
+     * @var 请求参数
+     */
+    public $post;
+    public $cookie;
+    public $get;
+    public $header;
+    public $server;
+    public $files;
+
     /**
      * @var $response
      */
