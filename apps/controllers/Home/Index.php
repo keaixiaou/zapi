@@ -23,15 +23,18 @@ use ZPHP\Model\Model;
 
 class Index extends Controller{
     public function index(){
-        //使用1-封装在service层,可以不写yield
+        //使用1-封装在service层,需要yield
         $testservice = new TestService();
-        $data = $testservice->test();
-        $data['get'] = $this->get;
+//        $data['info'] = yield $testservice->test();
+        $res = yield $testservice->cache('abcd1');
+        $res = $res -10;
+        $data['cache'] = $res;
+//        $data['get'] = $this->get;
         return $data;
 
         //使用2-也可直接在controller层,但是调用底层需要写yield
 //        yield Db::redis()->cache('abcd1',1111);
-//        $data = yield Db::redis()->cache('abcd1');
+//        $data = cache('abcd1');
 //        $res['cache'] = $data;
 //        $user = yield table('admin_user')->where(['id' => 2])->find();
 //        $res['user'] = $user;

@@ -54,7 +54,8 @@ class Controller {
      * @param $message
      */
     public function onSystemException($message){
-        $this->response->end(json_encode(['code'=>500,'msg'=>'系统出现了异常:'.$message]));
+        $message = DEBUG===true?'系统出现了异常:'.$message:'服务器稍微出现了点问题!';
+        $this->response->end(json_encode(['code'=>500,'msg'=>$message]));
         $this->destroy();
     }
 

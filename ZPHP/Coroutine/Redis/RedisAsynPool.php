@@ -109,23 +109,24 @@ class RedisAsynPool extends AsynPool
         $this->redis_max_count++;
         $nowConnectNo = $this->redis_max_count;
 
-        $client = new \swoole_redis();
-        $callback = function ($client, $result)use($nowConnectNo,$data) {
-            try {
-                if (!$result) {
-                    $this->redis_max_count--;
-                    throw new \Exception('[redis连接失败]'.$client->errMsg);
-                }
-                call_user_func([$this, 'initRedis'], $client, 'password', $nowConnectNo,$data);
-            }catch(\Exception $e){
-                $data['result']['exception'] = $e->getMessage();
-                call_user_func([$this, 'distribute'], $data);
-            }
-        };
+        $client = new \swoole_redis;
+//        $callback = ;
         if ($this->connect == null) {
             $this->connect = [$this->config['ip'], $this->config['port']];
         }
-        $client->connect($this->connect[0], $this->connect[1], $callback);
+        $client->connect($this->connect[0], $this->connect[1],
+            function (\swoole_redis $client, $result) use ($nowConnectNo, $data) {
+                try {
+                    if (!$result) {
+                        $this->redis_max_count--;
+                        throw new \Exception('[redis连接失败]' . $client->errMsg);
+                    }
+                    call_user_func([$this, 'initRedis'], $client, 'password', $nowConnectNo, $data);
+                } catch (\Exception $e) {
+                    $data['result']['exception'] = $e->getMessage();
+                    call_user_func([$this, 'distribute'], $data);
+                }
+        });
     }
 
 

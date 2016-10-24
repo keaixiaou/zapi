@@ -52,7 +52,6 @@ class CoroutineTask{
                     continue;
                 }
 
-
                 //异步IO的父类
                 if(is_subclass_of($value, 'ZPHP\Coroutine\Base\ICoroutineBase')){
                     $this->stack->push($routine);
