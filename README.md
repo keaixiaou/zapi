@@ -52,9 +52,9 @@ service层：
         $data['info'] = yield table('admin_user')->where(['id'=>1])->find();
         return $data;
 controller层:
-		//使用1-封装在service层,controller层可以不写yield
+		//使用1-封装在service层,controller层也得写yield
         $testservice = new TestService();
-        $data = $testservice->test();
+        $data = yield $testservice->test();
         return $data;
 ```
 
