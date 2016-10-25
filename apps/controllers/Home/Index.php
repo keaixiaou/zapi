@@ -25,10 +25,9 @@ class Index extends Controller{
     public function index(){
         //使用1-封装在service层,需要yield
         $testservice = new TestService();
-//        $data['info'] = yield $testservice->test();
-        $res = yield $testservice->cache('abcd1');
-        $res = $res -10;
-        $data['cache'] = $res;
+        $res = yield $testservice->test(1);
+        $data['data'] = $res;
+        $data['cache'] = yield $testservice->cache('abcd1');
 //        $data['get'] = $this->get;
         return $data;
 
@@ -70,6 +69,9 @@ class Index extends Controller{
 
 
     public function abcd(){
-        echo json_encode(['test'=>2]);
+        $testservice = new TestService();
+        $res = yield $testservice->test(2);
+        $data['data'] = $res;
+        return $data;
     }
 }
