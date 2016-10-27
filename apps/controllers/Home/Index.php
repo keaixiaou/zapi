@@ -23,15 +23,6 @@ use ZPHP\Model\Model;
 
 class Index extends Controller{
     public function index(){
-        //使用1-封装在service层,需要yield
-        $testservice = new TestService();
-        $vo = yield $testservice->test(1);
-        $data['vo'] = $vo;
-        return $data;
-    }
-
-
-    public function abcd(){
-        return ['test'=>2];
+        return ['data'=>'hello zapi'];
     }
 }
