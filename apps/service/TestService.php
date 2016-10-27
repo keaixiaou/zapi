@@ -13,9 +13,9 @@ use ZPHP\Core\Db;
 
 class TestService{
     public function test($id){
-        $sql = 'select * from admin_user where id='.$id;
+        $sql = 'select 1';
         $data['sql'] = $sql;
-        $data['info'] = yield table('admin_user')->where(['id'=>1])->find();
+        $data['info'] = yield table('')->query($sql);
         return $data;
     }
 
