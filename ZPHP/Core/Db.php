@@ -32,6 +32,7 @@ class Db {
     protected static $_redis;
     protected static $_collection;
     private static $lastSql;
+    private static $workId;
 
     private function __construct(){
         self::$instance = & $this;
@@ -49,11 +50,19 @@ class Db {
 
 
     /**
+     * @return workId
+     */
+    public static function getWorkId(){
+        return self::$workId;
+    }
+
+    /**
      * @param $workId
      * 初始化mysql连接池
      */
     static public function initMysqlPool($workId){
         if(empty(self::$instance->mysqlPool)) {
+            self::$workId = $workId;
             self::$instance->mysqlPool = new MysqlAsynPool();
             self::$instance->mysqlPool->initWorker($workId);
         }

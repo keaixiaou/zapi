@@ -7,8 +7,6 @@
  */
 
 namespace ZPHP\Controller;
-use ZPHP\Core\Log;
-use ZPHP\Core\Swoole;
 
 class Controller {
     /**
@@ -36,7 +34,6 @@ class Controller {
     public function coroutineApiStart(){
         $result = yield call_user_func([$this, $this->method]);
         $result = json_encode($result);
-        Log::write('result:'.$result);
         $this->response->end($result);
         $this->destroy();
     }

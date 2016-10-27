@@ -67,7 +67,11 @@ class CoroutineTask{
                 }
 
                 if($value===null) {
-                    $return = $routine->getReturn();
+                    try {
+                        $return = $routine->getReturn();
+                    }catch(\Exception $e){
+                        $return = null;
+                    }
                     if(!empty($return)){
                         $this->callbackData = $return;
                     }

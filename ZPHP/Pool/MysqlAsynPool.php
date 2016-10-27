@@ -135,13 +135,11 @@ class MysqlAsynPool extends AsynPool{
      */
     public function prepareOne($data)
     {
-        if($this->prepareLock) return;
         if ($this->mysql_max_count >= $this->config['asyn_max_count']) {
             return;
         }
 
         $this->mysql_max_count ++;
-        $this->prepareLock = true;
         $this->reconnect($data);
     }
 
