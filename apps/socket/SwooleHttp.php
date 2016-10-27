@@ -27,25 +27,8 @@ class SwooleHttp extends ZSwooleHttp
             if(strpos($uri,'.')!==false){
                 throw new \Exception(403);
             }
-            $url_array = explode('/', $uri);
-            if(!isset($url_array[3])){
-                if(!empty($url_array[1])){
-                    $mvc['controller'] = $url_array[1];
-                };
-                if(!empty($url_array[2])){
-                    $mvc['action'] = $url_array[2];
-                };
-            }else{
-                if(!empty($url_array[1])){
-                    $mvc['module'] = $url_array[1];
-                };
-                if(!empty($url_array[2])){
-                    $mvc['controller'] = $url_array[2];
-                };
-                if(!empty($url_array[3])){
-                    $mvc['action'] = $url_array[3];
-                };
-            }
+            $mvc = $this->getMvcByUri($uri);
+
             $controllerClass = Config::get('ctrl_path', 'controllers') . '\\'
                 .ucwords($mvc['module']).'\\'.ucwords($mvc['controller']);
 
@@ -105,6 +88,37 @@ class SwooleHttp extends ZSwooleHttp
         if(!empty($result)) {
             $response->end($result);
         }
+    }
+
+
+    /**
+     * @param $uri
+     * @return array|null
+     * @throws \Exception
+     */
+    protected function getMvcByUri($uri){
+        $mvc = Config::getField('project','mvc');
+        $url_array = explode('/', trim($uri,'/'));
+        if(!empty($url_array[3])){
+            throw new \Exception(402);
+        }else{
+            if(!empty($url_array[2])){
+                $mvc['module'] = $url_array[0];
+                $mvc['controller'] = $url_array[1];
+                $mvc['action'] = $url_array[2];
+            }else if(!empty($url_array[1])){
+                $mvc['controller'] = $url_array[0];
+                $mvc['action'] = $url_array[1];
+            }else if(!empty($url_array[0])){
+                $mvc['action'] = $url_array[0];
+            }
+        }
+        $mvc = [
+            'module'=>ucwords($mvc['module']),
+            'controller'=>ucwords($mvc['controller']),
+            'action'=>$mvc['action'],
+        ];
+        return $mvc;
     }
 
 

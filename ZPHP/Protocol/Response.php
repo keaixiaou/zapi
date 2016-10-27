@@ -26,6 +26,7 @@ class Response
         307 => "307 Temporary Redirect",
         400 => "400 Bad Request",
         401 => "401 Unauthorized",
+        402 => "402 Address error",
         403 => "403 Forbidden",
         404 => "404 Not Found",
         405 => "405 Method Not Allowed",
