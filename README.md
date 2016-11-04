@@ -11,7 +11,11 @@
 	3.swoole版本1.8.*
 	4.如果用到异步redis，需要安装hiredis，安装教程:http://wiki.swoole.com/wiki/page/p-redis.html
 
-##运行demo
+##安装依赖包
+	composer install
+	1.没有安装composer的先安装composer
+	2.不会composer或者不喜欢composer的可以直接去我另一个资源库下载,地址：https://github.com/keaixiaou/zphp
+##运行zapi
 
 	本框架只支持http模式：
 	运行：
