@@ -1,12 +1,6 @@
 {
     "name": "keaixiaou/zapi",
     "description": "a asyn php framewrok",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/keaixiaou/zphp.git"
-        }
-    ],
     "authors": [
         {
             "name": "keaixiaou",
@@ -15,15 +9,9 @@
         }
     ],
     "require": {
-        "keaixiaou/zphp":"dev-master",
-
-        "ext-swoole":"~1.8.12"
-    },
-
-    "autoload":{
-        "psr-4": {
-            "apps\\": ""
-        }
-
+        "keaixiaou/zphp":"dev-master"
     }
+
+
+
 }
