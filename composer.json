@@ -8,6 +8,12 @@
             "homepage": "https://github.com/keaixiaou/"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/keaixiaou/zphp"
+        }
+    ],
     "require": {
         "keaixiaou/zphp":"dev-master"
     }
