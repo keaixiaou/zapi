@@ -9,6 +9,7 @@ use ZPHP\Core\Log;
 use ZPHP\Core\Swoole;
 use ZPHP\Coroutine\Base\CoroutineTask;
 use ZPHP\Protocol\Response;
+use ZPHP\Session\Session;
 use ZPHP\Socket\Callback\SwooleHttp as ZSwooleHttp;
 use ZPHP\Socket\IClient;
 
@@ -46,16 +47,13 @@ class SwooleHttp extends ZSwooleHttp
                 throw new \Exception(404);
             }
 
-            //传入请求参数
-            $request_param_list = ['post','get','cookie','header','server','files'];
-            foreach($request_param_list as $param){
-                if(!empty($request->$param)){
-                    $controller->$param = $request->$param;
-                }
-            }
+            $this->doBeforeStart($request, $response);
+            $controller->module = $mvc['module'];
+            $controller->controller = $mvc['controller'];
             $controller->method= $action;
+            $controller->request = $request;
             $controller->response = $response;
-            $action = 'coroutineApiStart';
+            $action = 'coroutine'.(!empty($controller->isApi)?'Api':'Html').'Start';
             try{
                 $generator = call_user_func([$controller, $action]);
                 if ($generator instanceof \Generator) {
@@ -81,15 +79,32 @@ class SwooleHttp extends ZSwooleHttp
         }
         $result = ob_get_contents();
         ob_end_clean();
-//        if(!empty($controller->is_api)){
-//            $response->header('Content-Type', 'application/json');
-//        }
 
         if(!empty($result)) {
             $response->end($result);
         }
     }
 
+
+    /**
+     * 处理请求前的一些操作
+     * @param $request
+     * @param $response
+     * @throws \Exception
+     */
+    protected function doBeforeStart($request, $response){
+        //获取session
+        if(!empty(Config::getField('session','enable'))) {
+            $_SESSION = Session::get($request, $response);
+        }
+        //传入请求参数
+        if(!empty($request->cookie))$_COOKIE = $request->cookie;
+        if(!empty($request->post))$_POST = $request->post;
+        if(!empty($request->get))$_GET = $request->get;
+        if(!empty($request->files)) $_FILES = $request->files;
+        if(!empty($request->server)) $_SERVER = $request->server;
+
+    }
 
     /**
      * @param $uri
