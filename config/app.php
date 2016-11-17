@@ -8,6 +8,7 @@ return array(
     'app_path' => 'apps',
     'ctrl_path' => 'controllers',
     'common_file'  => '/library/function.php',
+    'response_filter' => true,
     'socket' => array(
         'host' => '0.0.0.0',                          //socket 监听ip
         'port' => 8991,                             //socket 监听端口
