@@ -1,9 +1,14 @@
 
-# zapi-根据zphp改造专门用来做http接口服务的轻量级框架
+# zapi-根据zphp改造专门用来做http接口服务的轻量级异步非阻塞框架
 (当前只用来做app接口用)
 
 ### 开发交流群:138897359
 
+##	优势
+	1.框架基于swoole开发，并且一些IO操作底层已经封装为异步，性能极其强悍。
+	2.框架底层已经封装好异步，内置mysql、redis连接池，只需要在调用的时候在前面加yield，近乎同步的写法，却是异步的调用，并且无需关注底层实现，连接数超等问题，使用非常简单。
+	
+	
 ## 注意事项
 
 	1.框架最新加入协程+mysql连接池，非阻塞的mysql查询大大提高了框架应对请求的吞吐量
@@ -14,7 +19,8 @@
 ##安装依赖包
 	composer install
 	1.没有安装composer的先安装composer
-	2.不会composer或者不喜欢composer的可以直接去我另一个资源库下载,地址：https://github.com/keaixiaou/zphp
+	2.不会composer或者不喜欢composer的可以直接去我另一个资源库下载框架依赖,地址：https://github.com/keaixiaou/zphp
+	
 ##运行zapi
 
 	本框架只支持http模式：
@@ -22,9 +28,6 @@
 	cd 到根目录
 	php webroot/main.php start|stop|restart|reload
 	访问IP:PORT
-	建议：
-		如果是静态文件，可以直接用nginx代理
-		如果是动态请求，最好使用nginx做代理转发
 
 ## 
 
@@ -32,7 +35,7 @@
 
 ###目录结构
 
-![目录结构](https://raw.githubusercontent.com/keaixiaou/base/master/%E7%9B%AE%E5%BD%95.png)
+![目录结构](https://raw.githubusercontent.com/keaixiaou/base/master/zapidir.jpeg)
 
 
 
@@ -84,7 +87,9 @@ return [
 使用:
 
 ```
-$data = yield Db::redis()->cache('abcd');
+$data = yield Db::redis()->cache('abcd'); //读取缓存
+
+$res = yield Db::
 ```
 
 只要在config目录下配置cache文件，即可在业务里调用缓存方法,如：
@@ -102,9 +107,48 @@ $data = yield Db::redis()->cache('abcd');
 在config下配置mysql的配置文件，即可在业务中使用,你可以使用以下方法查询数据
 
 ```
-$data = yield Db::table()->query('select* from admin_user');
-$a = yield DB::table()->query('select*from admin_user where id =1');
-$userinfo = yield table('admin_user')->where(['id'=>1])->find();
+比如是一张test表，里面有字段:id，content
+$data = yield Db::table()->query('select* from test');
+query方法查询出来的结果:
+{
+    "client_id": 1,
+    "result": [
+        {
+            "id": "1",
+            "content": "222333"
+        }
+    ],
+    "affected_rows": 0,
+    "insert_id": 0
+}
+
+如果query执行失败则里面的result为false
+
+$userinfo = yield table('test')->where(['id'=>1])->find();
+find 方法查询出来的结果：
+ {
+    "id": "1",
+    "content": "222333"
+}
+
+$userinfo = yield table('test')->where(['id'=>1])->get();
+get 方法查询出来的结果:
+[
+    {
+        "id": "1",
+        "content": "222333"
+    }
+]
+
+$insertId = yield Db::table('test')->add(['content'=>'333']);
+add 方法得到的结果是：2（主键ID)
+
+
+$res = yield Db::table('test')->save(['content'=>'333']);
+save方法得到的结果是:0（修改的行数）
+
+以上add,get,find,save 如果执行失败则返回false
+
 ```
 
 
@@ -112,7 +156,8 @@ $userinfo = yield table('admin_user')->where(['id'=>1])->find();
 
 ```
 $httpClient = new HttpClientCoroutine();
-$data = yield $httpClient->request('http://speak.test.com/');
+$data = yield $httpClient->request('http://speak.test.com/');//get请求
+$data = yield $httpClient->request('http://speak.test.com/',['a'=>1]);//post请求
 ```
 
 ###框架全部封装好.怎么样，这异步用起来是不是很简单^_^
