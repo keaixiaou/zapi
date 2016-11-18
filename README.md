@@ -70,6 +70,7 @@ controller层:
 
 ###Cache-redis(已经是异步非阻塞)
 
+只要在config目录下配置cache文件，即可在业务里调用缓存方法,如：
 配置:
 
 ```
@@ -87,14 +88,11 @@ return [
 使用:
 
 ```
-$data = yield Db::redis()->cache('abcd'); //读取缓存
-
-$res = yield Db::
+$data = yield Db::redis()->cache($key); //读取缓存
+$res = yield Db::redis()->cache($key,$value);//写缓存，$value需传string,返回true或者false
 ```
 
-只要在config目录下配置cache文件，即可在业务里调用缓存方法,如：
 
-## 
 
 
 
@@ -173,15 +171,15 @@ $data = Db::collection('stu_quest_score')->findOne(['iStuId'=>26753]);
 
 
 
-
-##ab测试-本机裸跑输出
+##ab测试（配置：MacBook Air 8G内存，双核，I5）
+###本机裸跑输出
 
 ![本机裸跑输出](https://raw.githubusercontent.com/keaixiaou/base/master/%E8%A3%B8%E8%B7%91%E6%B5%8B%E8%AF%95.png)
 
-##abredis测试，2个work
+###redis测试，2个work
 ![redis测试](https://raw.githubusercontent.com/keaixiaou/base/master/api%E6%B5%8B%E8%AF%95.png)
 
-##ab测试-本机(mac air)查询mysql，4个work进程，每个work10个链接mysql连接池
+###mysql测试，4个work进程，每个work10个链接mysql连接池
 ![本机查询mysql](https://raw.githubusercontent.com/keaixiaou/base/master/mysql.png)
 
 
