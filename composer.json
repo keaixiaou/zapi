@@ -8,6 +8,7 @@
             "homepage": "https://github.com/keaixiaou/"
         }
     ],
+    "license": "MIT",
     "repositories": [
         {
             "type": "vcs",
