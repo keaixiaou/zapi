@@ -66,7 +66,14 @@ controller层:
         $testservice = new TestService();
         $data = yield $testservice->test();
         return $data;
+
 ```
+####2016-11-28增加service和model的全局注入和引用:
+	如上new创建的class，建议改为App::getService('test');
+	$data = yield App::getService('test')->test();
+	同样的如果使用数据，model层，可以使用如下
+	$data = yield App::getModel('test')->test();
+
 
 
 ## 
@@ -92,10 +99,14 @@ return [
 
 ```
 $data = yield Db::redis()->cache($key); //读取缓存
-$res = yield Db::redis()->cache($key,$value);//写缓存，$value需传string,返回true或者false
+$res = yield Db::redis()->cache($key,$value);//写缓存，$value需传string,
+返回true或者false
+
+
 ```
-
-
+####2016-11-28增加lpush和lpop等队列操作：
+	$res = yield Db::redis()->lpush('task','1111');
+	$res = yield Db::redis()->lpop('task','1111');
 
 
 
