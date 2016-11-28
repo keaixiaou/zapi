@@ -9,11 +9,23 @@
 namespace controllers\Home;
 
 use service\TestService;
+use ZPHP\Controller\Apicontroller;
 use ZPHP\Controller\Controller;
+use ZPHP\Core\App;
+use ZPHP\Core\Log;
 use ZPHP\Coroutine\Http\HttpClientCoroutine;
 use ZPHP\Core\Db;
+use ZPHP\Redis\Redis;
+use ZPHP\Route\Route;
 
-class Test extends Controller{
+class Test extends Apicontroller{
+
+
+    public function index(){
+        $data['list'] = yield App::getService('test')->test('abcd');
+        $data['request'] = $_REQUEST;
+        return $data;
+    }
     /**
      * service 封装方法
      * @return mixed

@@ -9,14 +9,16 @@
 namespace service;
 
 use model\TestModel;
+use ZPHP\Core\App;
 use ZPHP\Core\Db;
 
 class TestService{
-    public function test($id){
-        $sql = 'select 1';
-        $data['sql'] = $sql;
-        $data['info'] = yield table('')->query($sql);
+
+
+    public function test($key){
+        $data = yield App::getModel('Test')->test($key);
         return $data;
+
     }
 
 

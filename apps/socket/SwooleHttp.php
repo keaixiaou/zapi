@@ -2,6 +2,7 @@
 
 namespace socket;
 
+use ZPHP\Core\App;
 use ZPHP\Core\Db;
 use ZPHP\Core\Factory;
 use ZPHP\Core\Config;
@@ -9,6 +10,7 @@ use ZPHP\Core\Log;
 use ZPHP\Core\Swoole;
 use ZPHP\Coroutine\Base\CoroutineTask;
 use ZPHP\Protocol\Response;
+use ZPHP\Route\Route;
 use ZPHP\Session\Session;
 use ZPHP\Socket\Callback\SwooleHttp as ZSwooleHttp;
 use ZPHP\Socket\IClient;
@@ -23,15 +25,20 @@ class SwooleHttp extends ZSwooleHttp
     {
         ob_start();
         try {
-            $mvc = Config::getField('project','mvc');
+            $this->doBeforeStart($request, $response);
+
             $uri = $request->server['path_info'];
             if(strpos($uri,'.')!==false){
                 throw new \Exception(403);
             }
-            $mvc = $this->getMvcByUri($uri);
+            $mvc = \ZPHP\Core\Route::parse($uri, $request->server['request_method']);
+            if(!is_array($mvc)){
+                $response->end(call_user_func($mvc));
+                return 0;
+            }
 
             $controllerClass = Config::get('ctrl_path', 'controllers') . '\\'
-                .ucwords($mvc['module']).'\\'.ucwords($mvc['controller']);
+                .$mvc['module'].'\\'.$mvc['controller'];
 
             $FController = Factory::getInstance($controllerClass);
             if(empty($FController)){
@@ -47,7 +54,6 @@ class SwooleHttp extends ZSwooleHttp
                 throw new \Exception(404);
             }
 
-            $this->doBeforeStart($request, $response);
             $controller->module = $mvc['module'];
             $controller->controller = $mvc['controller'];
             $controller->method= $action;
@@ -99,8 +105,10 @@ class SwooleHttp extends ZSwooleHttp
         }
         //传入请求参数
         if(!empty($request->cookie))$_COOKIE = $request->cookie;
-        if(!empty($request->post))$_POST = $request->post;
-        if(!empty($request->get))$_GET = $request->get;
+        if(!empty($request->post))$_POST = $request->post??[];
+        if(!empty($request->get))$_GET = $request->get??[];
+        $methodType = $request->server['request_method'];
+        $_REQUEST = $methodType=='GET'?array_merge($_GET, $_POST):array_merge($_POST, $_GET);
         if(!empty($request->files)) $_FILES = $request->files;
         if(!empty($request->server)) $_SERVER = $request->server;
 
@@ -152,6 +160,8 @@ class SwooleHttp extends ZSwooleHttp
         if (!$server->taskworker) {//worker进程启动协程调度器
             Db::getInstance()->initMysqlPool($workerId);
             Db::getInstance()->initRedisPool($workerId);
+//            Route::initRouteList(Route::getInstance());
+            App::init(Factory::getInstance('ZPHP\Core\DI'));
         }
     }
 
