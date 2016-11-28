@@ -114,36 +114,6 @@ class SwooleHttp extends ZSwooleHttp
 
     }
 
-    /**
-     * @param $uri
-     * @return array|null
-     * @throws \Exception
-     */
-    protected function getMvcByUri($uri){
-        $mvc = Config::getField('project','mvc');
-        $url_array = explode('/', trim($uri,'/'));
-        if(!empty($url_array[3])){
-            throw new \Exception(402);
-        }else{
-            if(!empty($url_array[2])){
-                $mvc['module'] = $url_array[0];
-                $mvc['controller'] = $url_array[1];
-                $mvc['action'] = $url_array[2];
-            }else if(!empty($url_array[1])){
-                $mvc['controller'] = $url_array[0];
-                $mvc['action'] = $url_array[1];
-            }else if(!empty($url_array[0])){
-                $mvc['action'] = $url_array[0];
-            }
-        }
-        $mvc = [
-            'module'=>ucwords($mvc['module']),
-            'controller'=>ucwords($mvc['controller']),
-            'action'=>$mvc['action'],
-        ];
-        return $mvc;
-    }
-
 
     /**
      * @param $server
@@ -160,7 +130,6 @@ class SwooleHttp extends ZSwooleHttp
         if (!$server->taskworker) {//worker进程启动协程调度器
             Db::getInstance()->initMysqlPool($workerId);
             Db::getInstance()->initRedisPool($workerId);
-//            Route::initRouteList(Route::getInstance());
             App::init(Factory::getInstance('ZPHP\Core\DI'));
         }
     }
