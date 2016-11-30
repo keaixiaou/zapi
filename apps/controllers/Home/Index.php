@@ -9,9 +9,24 @@
 namespace controllers\Home;
 
 use ZPHP\Controller\Apicontroller;
+use ZPHP\Core\Db;
+use ZPHP\Core\Log;
 
 class Index extends Apicontroller{
     public function index(){
-        return ['data'=>'hello zapi'];
+        return 'hello zpi!';
     }
+
+    public function test($id=0){
+        $id = !empty($id)?$id:$_REQUEST['id'];
+        $data = yield Db::redis()->cache('admin_user_'.$id);
+        $data = json_decode($data, true);
+        return ['data'=>$data,'request'=>$_REQUEST];
+    }
+
+
+    public function main(){
+        return 'hello zpi!';
+    }
+
 }

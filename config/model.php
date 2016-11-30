@@ -9,6 +9,6 @@
 
 return [
     'model'=>[
-        'abcd' => model\TestModel::class,
+        'test' => model\TestModel::class,
     ]
 ];

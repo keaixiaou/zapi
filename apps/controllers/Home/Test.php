@@ -12,6 +12,7 @@ use service\TestService;
 use ZPHP\Controller\Apicontroller;
 use ZPHP\Controller\Controller;
 use ZPHP\Core\App;
+use ZPHP\Core\Factory;
 use ZPHP\Core\Log;
 use ZPHP\Coroutine\Http\HttpClientCoroutine;
 use ZPHP\Core\Db;
@@ -20,9 +21,8 @@ use ZPHP\Route\Route;
 
 class Test extends Apicontroller{
 
-
-    public function index(){
-        $data['list'] = yield App::getService('test')->test('abcd');
+    public function index($abcd='abcd'){
+        $data['list'] = yield App::getService('test')->test($abcd);
         $data['request'] = $_REQUEST;
         return $data;
     }
@@ -64,7 +64,7 @@ class Test extends Apicontroller{
      */
     public function cache(){
         //使用2 - 写缓存
-        yield Db::redis()->cache('abcd1',1111);
+//        yield Db::redis()->cache('abcd1',1111);
         // 读缓存
         $data = yield Db::redis()->cache('abcd1');
         $res['cache'] = $data;

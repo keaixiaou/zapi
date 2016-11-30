@@ -16,11 +16,15 @@ class TestModel{
 
     function __construct()
     {
-        Log::write('testmodel construct');
     }
 
     public function test($key){
         $data = yield Db::redis()->cache($key);
         return $data;
+    }
+
+    public function getUserDetail($id){
+        $user = yield Db::table('user')->where(['id'=>$id])->find();
+        return ['user'=>$user,'id'=> $id];
     }
 }

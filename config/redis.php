@@ -9,10 +9,10 @@
 
 return [
     'redis'=>[
-        'ip' => 'localhost',
+        'ip' => '127.0.0.1',
         'port' => 6379,
         'select' => 0,
-        'password' => '',
+        'password' => '123456',
         'asyn_max_count' => 10,
     ]
 ];

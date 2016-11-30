@@ -16,7 +16,7 @@ class TestService{
 
 
     public function test($key){
-        $data = yield App::getModel('Test')->test($key);
+        $data = yield App::getModel('test')->test($key);
         return $data;
 
     }
