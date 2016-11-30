@@ -41,7 +41,6 @@ class SwooleHttp extends ZSwooleHttp
     {
         ob_start();
         try {
-
             if(strpos($request->server['path_info'],'.')!==false){
                 throw new \Exception(403);
             }
@@ -53,7 +52,6 @@ class SwooleHttp extends ZSwooleHttp
                 }
                 $response->end($httpResult);
             }
-            return 0;
         } catch (\Exception $e) {
             if(intval($e->getMessage())==0){
                 Log::write('Exception error. Request:'.json_encode($request));
