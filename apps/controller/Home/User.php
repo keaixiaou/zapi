@@ -6,7 +6,7 @@
  * Time: 下午2:14
  */
 
-namespace controllers\Home;
+namespace controller\Home;
 
 use ZPHP\Controller\Apicontroller;
 use ZPHP\Core\Db;

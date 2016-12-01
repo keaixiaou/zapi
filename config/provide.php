@@ -16,8 +16,8 @@ return [
         'Test' => model\Test::class,
     ],
     'controller' => [
-        'index' => controllers\Home\Index::class,
-        'user' => controllers\Home\User::class,
+        'HomeIndex' => controller\Home\Index::class,
+        'user' => controller\Home\User::class,
     ],
 
 ];

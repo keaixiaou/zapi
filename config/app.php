@@ -6,7 +6,7 @@ return array(
     'server_mode' => 'Socket',
     'project_name' => 'zapi',
     'app_path' => 'apps',
-    'ctrl_path' => 'controllers',
+    'ctrl_path' => 'controller',
     'common_file'  => '/library/function.php',
     'response_filter' => true,
     'socket' => array(

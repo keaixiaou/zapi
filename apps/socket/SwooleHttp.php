@@ -53,11 +53,12 @@ class SwooleHttp extends ZSwooleHttp
                 $response->end($httpResult);
             }
         } catch (\Exception $e) {
-            if(intval($e->getMessage())==0){
-                Log::write('Exception error. Request:'.json_encode($request));
+            $code = intval($e->getMessage());
+            if($code==0){
+                Log::write('Exception error. Request:'.json_encode($e->getMessage()));
             }
-            $response->status($e->getMessage());
-            echo Swoole::info(Response::$HTTP_HEADERS[$e->getMessage()]);
+            $response->status($code);
+            echo Swoole::info(Response::$HTTP_HEADERS[$code]);
         }
         $result = ob_get_contents();
         ob_end_clean();

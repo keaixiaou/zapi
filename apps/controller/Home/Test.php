@@ -6,7 +6,7 @@
  * Time: 上午9:55
  */
 
-namespace controllers\Home;
+namespace controller\Home;
 
 use service\TestService;
 use ZPHP\Controller\Apicontroller;

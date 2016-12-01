@@ -21,7 +21,7 @@ return [
         'ANY' => [
             '/' => 'Index\main',
             '/user/{name}/no/{id}' => function($id, $name){
-                return \ZPHP\Core\App::getController('index')->user($id, $name);
+                return \ZPHP\Core\App::controller('home\index')->user($id, $name);
             },
         ],
     ],
