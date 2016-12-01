@@ -22,7 +22,7 @@ use ZPHP\Route\Route;
 class Test extends Apicontroller{
 
     public function index($abcd='abcd'){
-        $data['list'] = yield App::getService('test')->test($abcd);
+        $data['list'] = yield App::service('test')->test($abcd);
         $data['request'] = $_REQUEST;
         return $data;
     }

@@ -19,7 +19,7 @@ class Index extends Apicontroller{
 
     public function test($id=0){
         $id = !empty($id)?$id:$this->input->get('id');
-        $data = yield Db::redis()->cache('abcd','hello zapi!', 3600);
+        $data = yield Db::redis()->cache('abcd','hello zapi!', 6);
 //        $data = json_decode($data, true);
         return ['data'=>$data,'request'=>$this->input->request()];
     }

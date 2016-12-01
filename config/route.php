@@ -14,7 +14,7 @@ return [
         ],
         'POST' => [
 
-            '/test/{id}' => function($id){
+            '/testinfo/{id}' => function($id){
                 return $id;
             },
         ],
@@ -23,13 +23,6 @@ return [
             '/user/{name}/no/{id}' => function($id, $name){
                 return \ZPHP\Core\App::getController('index')->user($id, $name);
             },
-            '/controller/{id}'=>function($id){
-                return \ZPHP\Core\App::getController('index')->index($id);
-            },
-
-            '/testc/{id}' =>function($id){
-                return \ZPHP\Core\App::getController('test')->index($id);
-            }
         ],
     ],
 ];

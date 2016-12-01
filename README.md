@@ -52,7 +52,44 @@ MIT license
 
 ## 路由
 
-​	根据pathinfo访问对应得controller，如ip:port/home/index/index则会访问home目录下的IndexController的index方法；如果不指定pathinfo则访问home目录下的IndexController的index方法
+​	根据pathinfo访问对应得controller，如ip:port/home/index/index则会访问home目录下的Index的index方法；如果不指定pathinfo则访问home目录下的Index的index方法
+####​2016-12-01 新增自定义路由
+
+```
+​	目前路由支持：1.普通闭包函数；2.指定controller和method；3.闭包里直接调用相关yield方法
+	只需要在route.php里配置自定义路由，就可以在请求中使用。
+        'GET' => [
+            '/testindex' => function(){return 111;},
+            //1.普通闭包函数
+        ],
+        'POST' => [
+
+            '/test/{id}' => function($id){
+                return $id;
+            },
+        ],
+        'ANY' => [
+            '/' => '\Home\Index\main',
+            //2.指定controller和method
+            '/user/{name}/no/{id}' => function($id, $name){
+                return \ZPHP\Core\App::controller('index')->user($id, $name);
+                //3.有相关异步操作的闭包,App::controller是获取全局对应的controller
+            },
+        ],
+
+```
+
+##controller
+####2016-12-01-在controller注入get、post、session、cookie等参数（因为整个框架是异步的，所以会导致一个work进程内同时存在多个请求，所以$_GET,$_POST,$_REQUEST,$_SESSION等以前用的全局变量下一个请求的值影响上一个还没处理完请求的值，造成数据混乱）
+```
+
+$this->input->get('id');
+//在controller里获取$_GET['id'];
+$this->input->get('id', true);
+//在controller里获取$_GET['id']被过滤过的值;
+$this->input->get();
+//在controller里获取整个$_GET
+```
 
 ##service
 ```
@@ -63,18 +100,39 @@ service层：
         return $data;
 controller层:
 		//使用1-封装在service层,controller层也得写yield
-        $testservice = new TestService();
+        $testservice = yield App::service('test')
         $data = yield $testservice->test();
         return $data;
 
 ```
+
+
 ####2016-11-28增加service和model的全局注入和引用:
+```
 	如上new创建的class，建议改为App::getService('test');
-	$data = yield App::getService('test')->test();
+	$data = yield App::service('test')->test();
+	//App::service('test')是引用全局容器里的相关组件，耦合度低，可维护性强
 	同样的如果使用数据，model层，可以使用如下
-	$data = yield App::getModel('test')->test();
+	$data = yield App::model('test')->test();
+	
+	提示：
+	App::model('test')里面的test可以是在provide里面对应配置，也可以是直接对应的类名
+	示例provide配置文件:
+	return [
+    'service'=>[
+        'test' => service\Test::class,
+    ],
+    'model'=>[
+        'test' => model\Test::class,
+    ],
+    'controller' => [
+        'index' => controllers\Home\Index::class,
+        'user' => controllers\Home\User::class,
+    ],
 
-
+];
+	
+```
 
 ## 
 
@@ -98,8 +156,13 @@ return [
 使用:
 
 ```
-$data = yield Db::redis()->cache($key); //读取缓存
-$res = yield Db::redis()->cache($key,$value);//写缓存，$value需传string,
+$data = yield Db::redis()->cache($key); 
+//读取缓存
+$res = yield Db::redis()->cache($key,$value);
+//写缓存，$value需传string,如此调用是保存缓存永久
+$res = yield Db::redis()->cache($key,$value, 3600);
+//写缓存，缓存时间为3600妙
+
 返回true或者false
 
 

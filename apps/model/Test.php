@@ -12,7 +12,7 @@ namespace model;
 use ZPHP\Core\Db;
 use ZPHP\Core\Log;
 
-class TestModel{
+class Test{
 
     function __construct()
     {

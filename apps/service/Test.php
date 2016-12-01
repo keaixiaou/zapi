@@ -12,11 +12,11 @@ use model\TestModel;
 use ZPHP\Core\App;
 use ZPHP\Core\Db;
 
-class TestService{
+class Test{
 
 
     public function test($key){
-        $data = yield App::getModel('test')->test($key);
+        $data = yield App::model('test')->test($key);
         return $data;
 
     }

@@ -10,10 +10,10 @@
 
 return [
     'service'=>[
-        'test' => service\TestService::class,
+        'Test' => service\Test::class,
     ],
     'model'=>[
-        'test' => model\TestModel::class,
+        'Test' => model\Test::class,
     ],
     'controller' => [
         'index' => controllers\Home\Index::class,
