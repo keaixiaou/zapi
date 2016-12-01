@@ -84,7 +84,9 @@ class SwooleHttp extends ZSwooleHttp
         if(!empty($common)){
             require ROOTPATH.$common;
         }
-        if (!$server->taskworker) {//worker进程启动协程调度器
+        if (!$server->taskworker) {
+            //worker进程启动协程调度器
+            //work一启动加载连接池的链接、组件容器、路由
             Db::getInstance()->initMysqlPool($workerId);
             Db::getInstance()->initRedisPool($workerId);
             App::init(Factory::getInstance(\ZPHP\Core\DI::class));
