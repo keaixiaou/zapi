@@ -89,6 +89,7 @@ $this->input->get('id', true);
 //在controller里获取$_GET['id']被过滤过的值;
 $this->input->get();
 //在controller里获取整个$_GET
+支持request、post、files、server、cookie等，使用一样
 ```
 
 ##service
