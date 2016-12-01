@@ -73,7 +73,7 @@ MIT license
             //2.指定controller和method
             '/user/{name}/no/{id}' => function($id, $name){
                 return \ZPHP\Core\App::controller('index')->user($id, $name);
-                //3.有相关异步操作的闭包,App::controller是获取全局对应的controller
+                //3.有相关异步操作的闭包,App::controller是获取全局容器里的controller
             },
         ],
 
@@ -109,7 +109,7 @@ controller层:
 
 ####2016-11-28增加service和model的全局注入和引用:
 ```
-	如上new创建的class，建议改为App::getService('test');
+	如上new创建的class，建议改为App::service('test');
 	$data = yield App::service('test')->test();
 	//App::service('test')是引用全局容器里的相关组件，耦合度低，可维护性强
 	同样的如果使用数据，model层，可以使用如下
