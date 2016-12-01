@@ -23,8 +23,8 @@ class TestModel{
         return $data;
     }
 
-    public function getUserDetail($id){
+    public function getUserDetail($id, $name){
         $user = yield Db::table('user')->where(['id'=>$id])->find();
-        return ['user'=>$user,'id'=> $id];
+        return ['user'=>$user,'id'=> $id, 'name'=>$name];
     }
 }

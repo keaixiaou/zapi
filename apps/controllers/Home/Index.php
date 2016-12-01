@@ -18,12 +18,16 @@ class Index extends Apicontroller{
     }
 
     public function test($id=0){
-        $id = !empty($id)?$id:$_REQUEST['id'];
-        $data = yield Db::redis()->cache('admin_user_'.$id);
-        $data = json_decode($data, true);
-        return ['data'=>$data,'request'=>$_REQUEST];
+        $id = !empty($id)?$id:$this->input->get('id');
+        $data = yield Db::redis()->cache('abcd','hello zapi!', 3600);
+//        $data = json_decode($data, true);
+        return ['data'=>$data,'request'=>$this->input->request()];
     }
 
+    public function user($id, $name){
+        $user = yield Db::table('user')->where(['id'=>$id])->find();
+        return ['user'=>$user,'id'=> $id,'name'=>$name];
+    }
 
     public function main(){
         return 'hello zpi!';

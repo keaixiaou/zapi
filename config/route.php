@@ -20,8 +20,8 @@ return [
         ],
         'ANY' => [
             '/' => 'Index\main',
-            '/user/{id}' => function($id){
-                return \ZPHP\Core\App::getModel('test')->getUserDetail($id);
+            '/user/{name}/no/{id}' => function($id, $name){
+                return \ZPHP\Core\App::getController('index')->user($id, $name);
             },
             '/controller/{id}'=>function($id){
                 return \ZPHP\Core\App::getController('index')->index($id);
