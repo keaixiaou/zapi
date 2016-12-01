@@ -38,7 +38,7 @@ MIT license
 
 ###目录结构
 
-![目录结构](https://raw.githubusercontent.com/keaixiaou/base/master/zapidir.jpeg)
+![目录结构](https://raw.githubusercontent.com/keaixiaou/base/master/WechatIMG1.jpeg)
 
 
 
@@ -72,7 +72,7 @@ MIT license
             '/' => '\Home\Index\main',
             //2.指定controller和method
             '/user/{name}/no/{id}' => function($id, $name){
-                return \ZPHP\Core\App::controller('index')->user($id, $name);
+                return \ZPHP\Core\App::controller('home\index')->user($id, $name);
                 //3.有相关异步操作的闭包,App::controller是获取全局容器里的controller
             },
         ],
