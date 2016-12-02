@@ -161,7 +161,15 @@ return [
     ]
 ];
 ```
-
+####2016-01-02新增redis配置参数start_count表示服务启动时进程内会启动的连接数
+```
+	'ip' => '127.0.0.1',
+    'port' => 6379,
+    'select' => 0,
+    'password' => '123456',
+    'asyn_max_count' => 10,
+    'start_count' => 10,
+```
 使用:
 
 ```
@@ -188,7 +196,33 @@ $res = yield Db::redis()->cache($key,$value, 3600);
 
 ##mysql(已经是异步非阻塞)
 
-在config下配置mysql的配置文件，即可在业务中使用,你可以使用以下方法查询数据
+在config下配置database的配置文件，即可在业务中使用,你可以使用以下方法查询数据
+配置:
+
+```
+return [ 
+	'database'=>[
+	    'master' => [
+	        'host' => '127.0.0.1',
+			'user' => 'keaixiaou',
+			'password' => '123456',
+			'database' => 'test',
+			'asyn_max_count' => 5,
+	        'start_count' => 1,
+	    ],
+	]
+]
+```
+####2016-01-02新增mysql配置参数start_count表示服务启动时进程内会启动的连接数
+```
+	'host' => '127.0.0.1',
+	'user' => 'keaixiaou',
+	'password' => '123456',
+	'database' => 'test',
+	'asyn_max_count' => 5,
+	'start_count' => 1,
+```
+使用：
 
 ```
 比如是一张test表，里面有字段:id，content
