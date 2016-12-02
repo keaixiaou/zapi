@@ -21,8 +21,13 @@ return [
         'ANY' => [
             '/' => 'Index\main',
             '/user/{name}/no/{id}' => function($id, $name){
-                return \ZPHP\Core\App::controller('home\index')->user($id, $name);
+                $data = yield \ZPHP\Core\App::controller('home\index')->user($id, $name);
+                return ['data'=>$data];
             },
+
+            '/user/{id}' => function($id){
+                return \ZPHP\Core\App::controller('home\index')->user($id);
+            }
         ],
     ],
 ];

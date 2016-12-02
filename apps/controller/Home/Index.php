@@ -24,7 +24,7 @@ class Index extends Apicontroller{
         return ['data'=>$data,'request'=>$this->input->request()];
     }
 
-    public function user($id, $name){
+    public function user($id, $name=''){
         $user = yield Db::table('user')->where(['id'=>$id])->find();
         return ['user'=>$user,'id'=> $id,'name'=>$name];
     }

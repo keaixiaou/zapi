@@ -26,6 +26,7 @@ return array(
 
     'project'=>array(
         'name'=>'zapi',                 //项目名称。(会做为前缀，隔离不同的项目)
+        'type' => 'api',
         'view_mode'=>'Stringv',   		//view模式
         'pid_path'  => ROOTPATH.'/webroot',
         'mvc'  => [

@@ -47,8 +47,8 @@ class SwooleHttp extends ZSwooleHttp
             $this->requestDeal->init($request, $response);
             $httpResult = $this->dispatcher->distribute($this->requestDeal);
             if($httpResult!=='NULL') {
-                if(!is_array($httpResult)){
-                    $httpResult = strval($httpResult);
+                if(!is_string($httpResult)){
+                    $httpResult = json_encode($httpResult);
                 }
                 $response->end($httpResult);
             }
