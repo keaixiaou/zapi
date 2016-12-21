@@ -14,6 +14,6 @@ return [
         'select' => 0,
         'password' => '123456',
         'asyn_max_count' => 10,
-        'start_count' => 10,
+        'start_count' =>  0,
     ]
 ];
