@@ -44,11 +44,16 @@ class SwooleHttp extends ZSwooleHttp
             if(strpos($request->server['path_info'],'.')!==false){
                 throw new \Exception(403);
             }
-            $this->requestDeal->init($request, $response);
-            $httpResult = $this->dispatcher->distribute($this->requestDeal);
+            $requestDeal = clone $this->requestDeal;
+            $requestDeal->init($request, $response);
+            $httpResult = $this->dispatcher->distribute($requestDeal);
             if($httpResult!=='NULL') {
                 if(!is_string($httpResult)){
-                    $httpResult = json_encode($httpResult);
+                    if(strval(Config::getField('project','type'))=='api'){
+                        $httpResult = json_encode($httpResult);
+                    }else{
+                        $httpResult = strval($httpResult);
+                    }
                 }
                 $response->end($httpResult);
             }
@@ -92,6 +97,7 @@ class SwooleHttp extends ZSwooleHttp
             Db::getInstance()->initSessionRedisPool($workerId, Config::get('session'));
             App::init(Factory::getInstance(\ZPHP\Core\DI::class));
             Route::init();
+            Session::init();
             $this->coroutineTask = Factory::getInstance(\ZPHP\Coroutine\Base\CoroutineTask::class);
             $this->dispatcher = Factory::getInstance(\ZPHP\Core\Dispatcher::class);
             $this->requestDeal = Factory::getInstance(\ZPHP\Core\Request::class, $this->coroutineTask);
