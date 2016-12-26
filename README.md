@@ -4,6 +4,9 @@
 ### (请关注zapi的同学也关注zhttp，zhttp功能更强大，而且兼容zapi)
 ### 开发交流群:384013097
 
+## 使用手册（待完善）
+https://keaixiaou.gitbooks.io/zhttp/content/
+
 ##协议
 MIT license
 
