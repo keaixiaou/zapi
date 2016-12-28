@@ -18,7 +18,8 @@ use ZPHP\Core\Db;
 use ZPHP\Redis\Redis;
 
 class Test extends Controller{
-
+//    public $isApi = true;
+//这个和下面的init函数效果一样
     protected function init(){
         $this->isApi = true;
         return true;

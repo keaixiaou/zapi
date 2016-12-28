@@ -13,10 +13,7 @@ use ZPHP\Core\Db;
 use ZPHP\Core\Log;
 
 class Index extends Controller{
-    protected function init(){
-        $this->isApi = true;
-        return true;
-    }
+    public $isApi = true;
 
     public function index(){
         return 'hello zpi!';
