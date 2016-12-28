@@ -9,8 +9,9 @@
 
 return [
     'mongo' => [
-        'host' => '192.168.5.6',
-        'port' => 50000,
-        'database' => 'SpeakTrain',
+        'asyn_max_count' => 5,
+        'host' => '127.0.0.1',
+        'port' => 5000,
+        'database' => 'test',
         ],
 ];

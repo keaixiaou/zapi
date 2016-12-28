@@ -8,11 +8,16 @@
 
 namespace controller\Home;
 
-use ZPHP\Controller\Apicontroller;
+use ZPHP\Controller\Controller;
 use ZPHP\Core\Db;
 use ZPHP\Core\Log;
 
-class Index extends Apicontroller{
+class Index extends Controller{
+    protected function init(){
+        $this->isApi = true;
+        return true;
+    }
+
     public function index(){
         return 'hello zpi!';
     }

@@ -284,13 +284,29 @@ $data = yield $httpClient->request('http://speak.test.com/',['a'=>1]);//post请�
 ###框架全部封装好.怎么样，这异步用起来是不是很简单^_^
 
 
-###mongo(还是同步阻塞的)
+###mongo（​2016-12-28 实现异步）
 在config下配置mongo的配置文件，即可在业务中使用，如下
+配置示例:
 
 ```
-$data = Db::collection('stu_quest_score')->findOne(['iStuId'=>26753]);
+return [
+    'mongo' => [
+        'asyn_max_count' => 5,
+        'host' => '127.0.0.1',
+        'port' => 5000,
+        'database' => 'test',
+        ],
+];
 ```
 
+
+使用示例:
+
+```
+$data = Db::collection('stu_quest_score')->where(['like'=>100])->find();
+```
+
+![本机裸跑输出](https://raw.githubusercontent.com/keaixiaou/base/master/mongo.jpeg)
 
 
 

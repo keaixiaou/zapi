@@ -9,7 +9,6 @@
 namespace controller\Home;
 
 use service\TestService;
-use ZPHP\Controller\Apicontroller;
 use ZPHP\Controller\Controller;
 use ZPHP\Core\App;
 use ZPHP\Core\Factory;
@@ -17,9 +16,13 @@ use ZPHP\Core\Log;
 use ZPHP\Coroutine\Http\HttpClientCoroutine;
 use ZPHP\Core\Db;
 use ZPHP\Redis\Redis;
-use ZPHP\Route\Route;
 
-class Test extends Apicontroller{
+class Test extends Controller{
+
+    protected function init(){
+        $this->isApi = true;
+        return true;
+    }
 
     public function index($abcd='abcd'){
         $data['list'] = yield App::service('test')->test($abcd);
@@ -44,7 +47,7 @@ class Test extends Apicontroller{
      * @return mixed
      */
     public function table(){
-        $user = yield table('admin_user')->where(['id' => 2])->find();
+        $user = yield table('admin_user')->where(['id' => 1])->find();
         $res['user'] = $user;
         return $res;
     }
