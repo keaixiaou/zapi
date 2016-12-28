@@ -32,9 +32,10 @@ MIT license
 	本框架只支持http模式：
 	运行：
 	cd 到根目录
-	php webroot/main.php start|stop|restart|reload
+	php webroot/main.php start|stop|restart|reload|status
 	访问IP:PORT
-
+###服务监控图
+![服务监控](https://raw.githubusercontent.com/keaixiaou/base/master/status.jpeg)
 ## 
 
 
