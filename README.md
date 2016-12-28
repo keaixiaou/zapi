@@ -61,7 +61,7 @@ MIT license
 ```
 ​	目前路由支持：
 ​	1.普通闭包函数；
-​	2.指定controller和method；
+​	2.指定model或者server里的method；
 ​	3.闭包里直接调用相关yield方法（尽量不要这么做，后期维护性差）
 	只需要在route.php里配置自定义路由，就可以在请求中使用。
         'GET' => [
@@ -76,16 +76,16 @@ MIT license
         ],
         'ANY' => [
             '/' => '\Home\Index\main',
-            //2.指定controller和method
+            //2.指定model和method
             '/user/{name}/no/{id}' => function($id, $name){
-                $data = yield \ZPHP\Core\App::controller('home\index')->user($id, $name);
+                $data = yield \ZPHP\Core\App::model('test')->getUserDetail($id, $name);
                 return ['data'=>$data];
             },
-                //3.有相关异步操作的闭包,App::controller是获取全局容器里的controller
+                //3.有相关异步操作的闭包,App::model是获取全局容器里的model
             '/user/{id}' => function($id){
-                return \ZPHP\Core\App::controller('home\index')->user($id);
-            },
-            //3.直接获取相关controller的数据
+                return \ZPHP\Core\App::model('test')->getUserById($id);
+            }
+     
         ],
 
 ```

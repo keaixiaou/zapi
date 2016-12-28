@@ -27,4 +27,9 @@ class Test{
         $user = yield Db::table('user')->where(['id'=>$id])->find();
         return ['user'=>$user,'id'=> $id, 'name'=>$name];
     }
+
+    public function getUserById($id){
+        $data = yield table('user')->where(['id'=>$id])->find();
+        return json_encode($data);
+    }
 }
