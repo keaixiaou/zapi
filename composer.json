@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "keaixiaou/zphp":"dev-master"
+        "keaixiaou/zphp":"v2.0"
     }
 
 
