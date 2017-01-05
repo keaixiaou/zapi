@@ -21,12 +21,11 @@ return array(
         'worker_num' => 1,                                 //工作进程数
         'max_request' => 0,                            //单个进程最大处理请求数
         'debug_mode' => 1,
-        'log_file' => ROOTPATH.'/log/swoole.log',//打开调试模式
+        'log_file' => ROOTPATH.'/tmp/log/swoole.log',//打开调试模式
     ),
 
     'project'=>array(
         'type' => 'api',
-        'view_mode'=>'Stringv',   		//view模式
         'pid_path'  => ROOTPATH.'/webroot',
         'mvc'  => [
             'module'=>'Home',

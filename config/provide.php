@@ -17,7 +17,6 @@ return [
     ],
     'controller' => [
         'HomeIndex' => controller\Home\Index::class,
-        'user' => controller\Home\User::class,
     ],
 
 ];
