@@ -15,6 +15,7 @@ use ZPHP\Core\Factory;
 use ZPHP\Core\Log;
 use ZPHP\Coroutine\Http\HttpClientCoroutine;
 use ZPHP\Core\Db;
+use ZPHP\Memcache\Memcache;
 use ZPHP\Redis\Redis;
 
 class Test extends Controller{
@@ -47,7 +48,7 @@ class Test extends Controller{
      * table 使用方法
      * @return mixed
      */
-    public function table(){
+    public function mysql(){
         $user = yield table('admin_user')->where(['id' => 1])->find();
         $res['user'] = $user;
         return $res;
@@ -75,7 +76,60 @@ class Test extends Controller{
     }
 
 
-    public function abcd(){
-        return ['test'=>2];
+    public function mongo(){
+        $pipline = [
+            [
+                '$group' =>
+                    [   '_id' => '$num',
+                        'sum' => ['$sum' => 1],
+                        'all' => ['$sum'=>'$num']
+                    ],
+
+            ],
+            [
+                '$sort' => [
+                    'sum' => 1
+                ]
+            ]
+
+
+        ];
+//        $data = yield Db::collection('hello')->aggregate($pipline);
+        $key = ['num'=>1];
+        $initial = ['all'=>0,'no'=>0,'finish'=>0];
+
+        $reduce = "function(obj, prev){prev.all=prev.all+obj.num}";
+//         $group = yield Db::collection('hello')->where(['like'=>['lte',5]])->group($key, $initial, $reduce);
+        // $aggregate = yield Db::collection('hello')->where(['])->setInc('num');
+//        $finddata = yield Db::collection('test')->where(['likes'=>100])->find();
+//        $getdata = yield Db::collection('test')->where(['likes'=>100])->get();
+//        $count = yield Db::collection('hello')->where(['like'=>['elt',5]])->count();
+        $data = yield Db::collection('hello')->where(['title'=>'MongoDB0'])->get();
+        return json_encode($data);
+        Log::write('mongo end!');
+        $this->assign('data', $data);
+        $this->setTemplate('home');
+        $this->display('index');
+    }
+
+    public function http(){
+        $client = new HttpClientCoroutine();
+        $url = 'http://www.baidu.com/';
+        $postData = [];
+        $data = yield $client->request($url, $postData);
+        return $data;
+    }
+
+    public function memcacheset(){
+        $data = yield Db::memcache()->cache('test', 'abcd');
+        return $data;
+    }
+    public function memcachedelete(){
+        $data = yield Db::memcache()->cache('test', null);
+        return $data;
+    }
+    public function memcacheget(){
+        $data = yield Db::memcache()->cache('test');
+        return $data;
     }
 }
