@@ -121,15 +121,15 @@ class Test extends Controller{
     }
 
     public function memcacheset(){
-        $data = yield Db::memcache()->cache('test', 'abcd');
+        $data = yield Db::memcached()->cache('mystr', 'abcd');
         return $data;
     }
     public function memcachedelete(){
-        $data = yield Db::memcache()->cache('test', null);
+        $data = yield Db::memcached()->cache('mystr', null);
         return $data;
     }
     public function memcacheget(){
-        $data = yield Db::memcache()->cache('test');
+        $data = yield Db::memcached()->cache('mystr');
         return $data;
     }
 }

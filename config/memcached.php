@@ -8,7 +8,7 @@
 
 return [
 
-    'memcache' => [
+    'memcached' => [
         'host'=>'192.168.5.5',
         'port' => 11211,
         'asyn_max_count' => 4,

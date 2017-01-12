@@ -19,7 +19,7 @@ class Test{
     }
 
     public function test($key){
-        $data = yield Db::redis()->cache($key);
+        $data = yield Db::table('user')->where(['id'=>$key])->find();
         return $data;
     }
 
