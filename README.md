@@ -5,7 +5,7 @@
 ### 开发交流群:384013097
 
 ## 使用手册（待完善）
-https://keaixiaou.gitbooks.io/zhttp/content/
+http://gitbook.jeekzx.com/
 
 ##协议
 MIT license
