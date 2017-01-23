@@ -3,8 +3,8 @@
 
 ### (请关注zapi的同学也关注zhttp，zhttp功能更强大，而且兼容zapi)
 ### 开发交流群:384013097
-###最新框架依赖环境docker镜像已经发布
-###(内置mongodb扩展、memcached扩展、swoole扩展1.9包括异步redis)
+最新框架依赖环境docker镜像已经发布
+(内置mongodb扩展、memcached扩展、swoole扩展1.9包括异步redis)
 
 ```
 //拉取方法
