@@ -32,4 +32,15 @@ class Test{
         $data = yield table('user')->where(['id'=>$id])->find();
         return json_encode($data);
     }
+
+    public function getRedis(){
+        $data = yield Db::redis()->cache('abcd1');
+        return $data;
+    }
+
+
+    public function getMemcached(){
+        $data = yield Db::memcached()->cache('mystr');
+        return $data;
+    }
 }

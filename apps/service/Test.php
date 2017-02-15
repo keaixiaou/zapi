@@ -16,7 +16,7 @@ class Test{
 
 
     public function test($key){
-        $data = yield App::model('test')->test($key);
+        $data = yield App::model('Test')->test($key);
         return $data;
 
     }

@@ -15,7 +15,6 @@ use ZPHP\Core\Factory;
 use ZPHP\Core\Log;
 use ZPHP\Coroutine\Http\HttpClientCoroutine;
 use ZPHP\Core\Db;
-use ZPHP\Memcache\Memcache;
 use ZPHP\Redis\Redis;
 
 class Test extends Controller{
@@ -27,8 +26,8 @@ class Test extends Controller{
     }
 
     public function index($abcd='abcd'){
-        $data['list'] = yield App::service('test')->test($abcd);
-        $data['request'] = $_REQUEST;
+        $data['list'] = yield App::service('Test')->test(1);
+        $data['request'] = $this->input->request;
         return $data;
     }
     /**
@@ -44,12 +43,17 @@ class Test extends Controller{
     }
 
 
+    public function mysqlquery(){
+        $data = yield Db::table('')->query("update `user` set nickname='admin1' where id =1 ; update `user` set nickname ='keaixiaou2' where id =2;");
+        return $data;
+    }
+
     /**
      * table 使用方法
      * @return mixed
      */
     public function mysql(){
-        $user = yield table('admin_user')->where(['id' => 1])->find();
+        $user = yield table('user')->where(['id' => 1])->find();
         $res['user'] = $user;
         return $res;
     }
@@ -71,8 +75,9 @@ class Test extends Controller{
         //使用2 - 写缓存
 //        yield Db::redis()->cache('abcd1',1111);
         // 读缓存
-        $data = yield Db::redis()->cache('abcd1');
+        $data = yield Db::redis()->decr('abcd1');
         $res['cache'] = $data;
+        return $res;
     }
 
 
@@ -104,9 +109,9 @@ class Test extends Controller{
 //        $finddata = yield Db::collection('test')->where(['likes'=>100])->find();
 //        $getdata = yield Db::collection('test')->where(['likes'=>100])->get();
 //        $count = yield Db::collection('hello')->where(['like'=>['elt',5]])->count();
-        $data = yield Db::collection('hello')->where(['title'=>'MongoDB0'])->get();
+        $data = yield Db::collection('log')->find();
         return json_encode($data);
-        Log::write('mongo end!');
+//        Log::write('mongo end!');
         $this->assign('data', $data);
         $this->setTemplate('home');
         $this->display('index');
