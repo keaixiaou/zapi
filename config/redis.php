@@ -13,7 +13,7 @@ return [
         'port' => 6379,
         'select' => 0,
         'password' => '123456',
-        'asyn_max_count' => 10,
+        'asyn_max_count' => 0,
         'start_count' =>  0,
     ]
 ];
