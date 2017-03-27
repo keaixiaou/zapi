@@ -15,9 +15,11 @@ docker pull keaixiaou/zhttp:1.0
 http://gitbook.jeekzx.com/
 
 ##协议
+
 MIT license
 
 ##	优势
+
 	1.框架基于swoole开发，并且一些IO操作底层已经封装为异步，性能极其强悍。
 	2.框架底层已经封装好异步，内置mysql、redis连接池，只需要在调用的时候在前面加yield，近乎同步的写法，却是异步的调用，并且无需关注底层实现，连接数超等问题，使用非常简单。
 	
@@ -30,6 +32,7 @@ MIT license
 	4.如果用到异步redis，需要安装hiredis，安装教程:http://wiki.swoole.com/wiki/page/p-redis.html
 
 ##安装依赖包
+
 	composer install
 	1.没有安装composer的先安装composer
 	2.不会composer或者不喜欢composer的可以直接去我另一个资源库下载框架依赖,地址：https://github.com/keaixiaou/zphp
@@ -41,8 +44,11 @@ MIT license
 	cd 到根目录
 	php webroot/main.php start|stop|restart|reload|status
 	访问IP:PORT
+
 ###服务监控图
+
 ![服务监控](https://raw.githubusercontent.com/keaixiaou/base/master/status.jpeg)
+
 ## 
 
 
