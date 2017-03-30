@@ -32,7 +32,6 @@ class Test extends Controller{
     }
     /**
      * service 封装方法
-     * @return mixed
      */
     public function service(){
         //使用1-封装在service层,需要yield
@@ -50,7 +49,6 @@ class Test extends Controller{
 
     /**
      * table 使用方法
-     * @return mixed
      */
     public function mysql(){
         $user = yield table('user')->where(['id' => 1])->find();
@@ -60,7 +58,6 @@ class Test extends Controller{
 
     /**
      * 异步http client使用方法
-     * @return array
      */
     public function httpClient(){
         $httpClient = new HttpClientCoroutine();
