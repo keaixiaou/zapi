@@ -15,30 +15,25 @@ docker pull keaixiaou/zhttp:1.0
 http://gitbook.jeekzx.com/
 
 ##协议
-
 MIT license
 
 ##	优势
-
 	1.框架基于swoole开发，并且一些IO操作底层已经封装为异步，性能极其强悍。
 	2.框架底层已经封装好异步，内置mysql、redis连接池，只需要在调用的时候在前面加yield，近乎同步的写法，却是异步的调用，并且无需关注底层实现，连接数超等问题，使用非常简单。
 	
 	
 ## 注意事项
-
 	1.框架最新加入协程+mysql连接池，非阻塞的mysql查询大大提高了框架应对请求的吞吐量
 	2.php版本需要7.0+
 	3.swoole版本1.8.*
 	4.如果用到异步redis，需要安装hiredis，安装教程:http://wiki.swoole.com/wiki/page/p-redis.html
 
 ##安装依赖包
-
 	composer install
 	1.没有安装composer的先安装composer
 	2.不会composer或者不喜欢composer的可以直接去我另一个资源库下载框架依赖,地址：https://github.com/keaixiaou/zphp
 	
 ##运行zapi
-
 	本框架只支持http模式：
 	运行：
 	cd 到根目录
@@ -57,21 +52,17 @@ MIT license
 
 ![目录结构](https://raw.githubusercontent.com/keaixiaou/base/master/WechatIMG1.jpeg)
 
-
-
-##apps -  mvc框架的controllers和service
-
-####			service 通常的调用服务层
+####     apps -  mvc框架的controllers和service
+####    service - 通常的调用服务层
 ####	config - 配置文件
 ####	library - 对应的全局函数,每个work进程启动的时候会加载这个方法
 
 ​		
 
 ## 路由
-
 ​	根据pathinfo访问对应得controller，如ip:port/home/index/index则会访问home目录下的Index的index方法；如果不指定pathinfo则访问home目录下的Index的index方法
-####​2016-12-01 新增自定义路由
 
+####​2016-12-01 新增自定义路由
 ```
 ​	目前路由支持：
 ​	1.普通闭包函数；
@@ -105,6 +96,7 @@ MIT license
 ```
 
 ##controller
+
 ####2016-12-01-在controller注入get、post、session、cookie等参数（因为整个框架是异步的，所以会导致一个work进程内同时存在多个请求，所以$_GET,$_POST,$_REQUEST,$_SESSION等以前用的全局变量下一个请求的值影响上一个还没处理完请求的值，造成数据混乱）
 ```
 
@@ -163,7 +155,6 @@ controller层:
 ## 
 
 ###Cache-redis(已经是异步非阻塞)
-
 只要在config目录下配置cache文件，即可在业务里调用缓存方法,如：
 配置:
 
@@ -178,6 +169,7 @@ return [
     ]
 ];
 ```
+
 ####2016-01-02新增redis配置参数start_count表示服务启动时进程内会启动的连接数
 ```
 	'ip' => '127.0.0.1',
@@ -187,6 +179,7 @@ return [
     'asyn_max_count' => 10,
     'start_count' => 10,
 ```
+
 使用:
 
 ```
@@ -201,6 +194,7 @@ $res = yield Db::redis()->cache($key,$value, 3600);
 
 
 ```
+
 ####2016-11-28增加lpush和lpop等队列操作：
 	$res = yield Db::redis()->lpush('task','1111');
 	$res = yield Db::redis()->lpop('task','1111');
@@ -212,7 +206,6 @@ $res = yield Db::redis()->cache($key,$value, 3600);
 
 
 ##mysql(已经是异步非阻塞)
-
 在config下配置database的配置文件，即可在业务中使用,你可以使用以下方法查询数据
 配置:
 
@@ -230,6 +223,7 @@ return [
 	]
 ]
 ```
+
 ####2016-01-02新增mysql配置参数start_count表示服务启动时进程内会启动的连接数
 ```
 	'host' => '127.0.0.1',
@@ -288,7 +282,6 @@ save方法得到的结果是:0（修改的行数）
 
 
 ###http client（已经是异步非阻塞）
-
 ```
 $httpClient = new HttpClientCoroutine();
 $data = yield $httpClient->request('http://speak.test.com/');//get请求
@@ -315,7 +308,6 @@ return [
 
 
 使用示例:
-
 ```
 $data = Db::collection('stu_quest_score')->where(['like'=>100])->find();
 ```

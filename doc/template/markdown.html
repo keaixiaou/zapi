@@ -1,0 +1,75 @@
+# <?php echo $name ?>
+
+###描述:
+<?php if(!empty($description))echo $description?>
+
+###url地址:
+<?php if(!empty($url))echo $url?>
+
+### 请求方式
+【<?php if(!empty($method))echo $method?>】
+
+###入参
+<table>
+    <thead>
+    <tr>
+        <th>参数名称</th>
+        <th style="text-align:center">参数类型</th>
+        <th>是否必传</th>
+        <th style="text-align:right">参数说明</th></tr>
+    </thead>
+    <tbody>
+    <?php if(!empty($param))foreach($param as $key => $value){ ?>
+    <tr>
+        <td><?php echo $value[1]?></td>
+        <td style="text-align:center"><?php echo $value[0]?></td>
+        <td><?php echo !empty($value[3]) && $value[3]=='option' ?"否":"是"?></td>
+        <td style="text-align:right"><?php echo $value[2]?></td></tr>
+    <tr>
+        <?php } ?>
+
+    </tbody>
+</table>
+<?php if(!function_exists('getcolor')){
+function getcolor($num){
+    $color = "";
+        switch($num){
+        case 0:$color="#ffffff";break;
+        case 1:$color="#efe7ff";break;
+        case 2:$color="#fcfdf0";break;
+        case 3:$color="#e7fbff";break;
+        case 4:$color="#f6f4f3";break;
+        case 5:$color="#d2fdd9";break;
+        case 6:$color="#fee9e7";break;
+        default:$color="";break;
+        }
+    return $color;
+    }}?>
+
+###出参
+<table id="dataTable-read">
+    <thead>
+    <tr>
+        <th>参数名称</th>
+        <th style="text-align:center">参数类型</th>
+        <th>说明</th>
+        <th style="text-align:right">备注</th></tr>
+    </thead>
+    <tbody>
+
+    <?php if(!empty($return))foreach($return as $key => $value){ $num = substr_count($value[1], '_');?>
+    <tr >
+        <td bgcolor="<?php echo getcolor($num)?>"><?php echo str_repeat("&nbsp;&nbsp;", $num).str_replace('_','',$value[1])?></td>
+        <td bgcolor="<?php echo getcolor($num)?>"style="text-align:center"><?php echo $value[0]?></td>
+        <td bgcolor="<?php echo getcolor($num)?>"><?php echo $value[2]?></td>
+        <td bgcolor="<?php echo getcolor($num)?>"style="text-align:right"><?php echo !empty($value[3])?$value[3]:"" ?></td>
+    </tr>
+    <?php }?>
+    </tbody>
+</table>
+
+###出参示例：
+```
+<?php if(!empty($example))echo $example?>
+
+```
