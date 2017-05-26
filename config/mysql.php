@@ -8,13 +8,15 @@
 
 return [
     'mysql'=>[
-        'host' => '127.0.0.1',
-        'port' => 3306,
-        'user' => 'test',
-        'password' => 'test',
-        'database' => 'test',
-        'asyn_max_count' => 0,
-        'start_count' => 0,
+        'default'=>[
+            'host' => '120.27.143.217',
+            'port' => 3306,
+            'user' => 'jeekzx',
+            'password' => '7f331f',
+            'database' => 'test',
+            'asyn_max_count' => 1,
+            'start_count' => 0,
+        ],
     ],
 
 ];
