@@ -33,6 +33,9 @@ return array(
             'action' => 'index'
             ],
         'reload' => DEBUG,
+        'view'=> [
+            'tag'=>true,
+        ],
     )
 
 );
